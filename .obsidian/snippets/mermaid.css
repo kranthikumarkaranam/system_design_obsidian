@@ -1,0 +1,17 @@
+/* Size */
+
+.markdown-preview-view .mermaid svg {
+  max-width: 780px !important;
+  height: auto !important;
+  margin: auto;
+}
+
+.markdown-preview-view .mermaid {
+  zoom: 0.9;
+  border: 1px solid #25262b;
+  border-radius: 6px;
+  padding-left: 0px;
+  padding-right: 80px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}

@@ -1,0 +1,282 @@
+{
+  "main": {
+    "id": "a87cdac78746cf09",
+    "type": "split",
+    "children": [
+      {
+        "id": "4636adaa26766f86",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "19852d7b1b01d6c8",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "empty",
+              "state": {},
+              "pinned": true,
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
+          },
+          {
+            "id": "9e1c478a0d96d995",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "FE Interview Prep/03 - Case Studies/_Case Study Template.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "_Case Study Template"
+            }
+          },
+          {
+            "id": "0c3711cefbc4f4d3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "IMP CONCEPTS.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "IMP CONCEPTS"
+            }
+          },
+          {
+            "id": "15f3734c47829697",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Case Study - News Feed (e.g. Facebook)"
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "f98f8ac2a4141d18",
+    "type": "split",
+    "children": [
+      {
+        "id": "03420869c968c293",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8a29009e28c58345",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "1b87ba3be76e20dd",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "369dd797cbe3a630",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "d4ad6605c52615fd",
+    "type": "split",
+    "children": [
+      {
+        "id": "09df59df5faf7c66",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f9b3c612f3971977",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "FE Interview Prep/03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
+                "collapseAll": true,
+                "extraContext": true,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Case Study - News Feed (e.g. Facebook)"
+            }
+          },
+          {
+            "id": "7ff43175fc51d174",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "FE Interview Prep/03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Case Study - News Feed (e.g. Facebook)"
+            }
+          },
+          {
+            "id": "c387994881a94a72",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "ad9300530cb8cfa7",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "2b1fa49f1d484303",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
+                "followCursor": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Case Study - News Feed (e.g. Facebook)"
+            }
+          },
+          {
+            "id": "20e60c3121b54318",
+            "type": "leaf",
+            "state": {
+              "type": "file-properties",
+              "state": {
+                "file": "FE Interview Prep/03 - Case Studies/Case Study - News Feed (e.g. Facebook).md"
+              },
+              "icon": "lucide-info",
+              "title": "File properties for Case Study - News Feed (e.g. Facebook)"
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "15f3734c47829697",
+  "lastOpenFiles": [
+    "IMP CONCEPTS.md",
+    "FE Interview Prep/03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
+    "FE Interview Prep/02 - Core Concepts/Accessibility (A11y).md",
+    "FE Interview Prep/02 - Core Concepts/Caching Strategies.md",
+    "FE Interview Prep/02 - Core Concepts/Component Architecture.md",
+    "FE Interview Prep/02 - Core Concepts/Networking and APIs.md",
+    "FE Interview Prep/02 - Core Concepts/Performance Optimization.md",
+    "FE Interview Prep/02 - Core Concepts/State Management.md",
+    "FE Interview Prep/02 - Core Concepts/Rendering Strategies.md",
+    "FE Interview Prep/03 - Case Studies/_Case Study Template.md",
+    "FE Interview Prep/03 - Case Studies/News Feed architecture.png",
+    "FE Interview Prep/CLAUDE.md",
+    "FE Interview Prep/03 - Case Studies/Untitled.base",
+    "canvas.png",
+    "Untitled.base",
+    "Pasted image 20260519000406.png",
+    "FE Interview Prep/03 - Case Studies/Case Study - Autocomplete.md",
+    "canvas 1.png",
+    "FE Interview Prep/01 - Guidebook/03 - RADIO Framework.md",
+    "FE Interview Prep/00 - MOC/canvas.canvas",
+    "FE Interview Prep/00 - MOC/FE SD - MOC.md",
+    "FE Interview Prep/01 - Guidebook/FE vs BE System Design.md",
+    "FE Interview Prep/01 - Guidebook/02 - FE SD - Types of Questions.md",
+    "FE Interview Prep/01 - Guidebook/06 - FE SD - Cheatsheet.md",
+    "FE Interview Prep/01 - Guidebook/05 - FE SD - Common Mistakes.md",
+    "FE Interview Prep/01 - Guidebook/04 - FE SD - Evaluation Axes.md",
+    "I — Interface definition (API design).md",
+    "FE Interview Prep/01 - Guidebook/01 - FE SD - Introduction.md",
+    "FE Interview Prep/01 - Guidebook/RADIO Framework.md",
+    "FE Interview Prep/01 - Guidebook/FE SD - Evaluation Axes.md",
+    "FE Interview Prep/01 - Guidebook/FE SD - Cheatsheet.md",
+    "FE Interview Prep/01 - Guidebook/FE SD - Common Mistakes.md",
+    "FE Interview Prep/04 - Eval & Mistakes",
+    "FE Interview Prep/02 - Framework",
+    "FE Interview Prep/01 - Guidebook",
+    "FE Interview Prep/05 - Eval Criteria",
+    "FE Interview Prep/03 - Case Studies",
+    "FE Interview Prep/03 - Question Types",
+    "FE Interview Prep/02 - Core Concepts",
+    "FE Interview Prep/01 - Framework"
+  ]
+}

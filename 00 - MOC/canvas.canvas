@@ -1,0 +1,17 @@
+{
+	"nodes":[
+		{"id":"001251b5246785e1","type":"group","x":160,"y":-380,"width":290,"height":340,"label":"Users"},
+		{"id":"d93383154f160a14","type":"file","file":"FE Interview Prep/01 - Guidebook/03 - RADIO Framework.md","x":563,"y":-589,"width":400,"height":400},
+		{"id":"4ad64b24c714b93e","type":"text","text":"sdfsbdfj","x":180,"y":-360,"width":250,"height":60},
+		{"id":"560b4c6445502cb3","type":"text","text":"wefwef","x":180,"y":-200,"width":250,"height":60},
+		{"id":"039b14ea846290cf","type":"text","text":"wfgfgds","x":180,"y":-120,"width":250,"height":60},
+		{"id":"57397ec744c3f372","type":"text","text":"dgsdg\n","x":180,"y":-280,"width":250,"height":60},
+		{"id":"b1c6a6a4ba1ff897","type":"file","file":"FE Interview Prep/00 - MOC/FE SD - MOC.md","x":580,"y":-117,"width":400,"height":400},
+		{"id":"967cf2221f36dc4b","type":"text","text":"Users","x":-240,"y":-249,"width":250,"height":60,"color":"1"}
+	],
+	"edges":[
+		{"id":"f50d759ba014da82","fromNode":"001251b5246785e1","fromSide":"right","toNode":"d93383154f160a14","toSide":"left"},
+		{"id":"c0cb3094d88c51d6","fromNode":"001251b5246785e1","fromSide":"right","toNode":"b1c6a6a4ba1ff897","toSide":"left"},
+		{"id":"ea4ca4fcbb63bd89","fromNode":"967cf2221f36dc4b","fromSide":"right","toNode":"560b4c6445502cb3","toSide":"left","fromEnd":"arrow"}
+	]
+}

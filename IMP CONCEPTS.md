@@ -1,0 +1,4 @@
+- Rendering Strategies
+- Hydration
+- Optimistic updates
+- Pagination: cursor-based vs offset-based
