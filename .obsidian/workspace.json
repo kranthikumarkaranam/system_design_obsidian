@@ -4,65 +4,38 @@
     "type": "split",
     "children": [
       {
-        "id": "4636adaa26766f86",
+        "id": "63ad755706ad113d",
         "type": "tabs",
         "children": [
           {
-            "id": "19852d7b1b01d6c8",
-            "type": "leaf",
-            "pinned": true,
-            "state": {
-              "type": "empty",
-              "state": {},
-              "pinned": true,
-              "icon": "lucide-file",
-              "title": "New tab"
-            }
-          },
-          {
-            "id": "9e1c478a0d96d995",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "FE Interview Prep/03 - Case Studies/_Case Study Template.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "_Case Study Template"
-            }
-          },
-          {
-            "id": "0c3711cefbc4f4d3",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "IMP CONCEPTS.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "IMP CONCEPTS"
-            }
-          },
-          {
-            "id": "15f3734c47829697",
+            "id": "1a28f5d484481d92",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
                 "file": "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
-                "mode": "preview",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
               "title": "Case Study - News Feed (e.g. Facebook)"
             }
+          },
+          {
+            "id": "2f641b88b63a4f16",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "04 - Detailed Explanations/Why Entity Ranges are recommended.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Why Entity Ranges are recommended"
+            }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "vertical"
@@ -74,6 +47,7 @@
       {
         "id": "03420869c968c293",
         "type": "tabs",
+        "dimension": 73.51421188630492,
         "children": [
           {
             "id": "8a29009e28c58345",
@@ -94,7 +68,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "networking",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -116,10 +90,27 @@
             }
           }
         ]
+      },
+      {
+        "id": "affc500318873412",
+        "type": "tabs",
+        "dimension": 26.485788113695083,
+        "children": [
+          {
+            "id": "5752b1e345585f34",
+            "type": "leaf",
+            "state": {
+              "type": "recent-files",
+              "state": {},
+              "icon": "clock",
+              "title": "Recent files"
+            }
+          }
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 457.5
   },
   "right": {
     "id": "d4ad6605c52615fd",
@@ -212,7 +203,7 @@
             "state": {
               "type": "file-properties",
               "state": {
-                "file": "FE Interview Prep/03 - Case Studies/Case Study - News Feed (e.g. Facebook).md"
+                "file": "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md"
               },
               "icon": "lucide-info",
               "title": "File properties for Case Study - News Feed (e.g. Facebook)"
@@ -223,7 +214,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 372.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -233,12 +224,28 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "bases:Create new base": false
+      "bases:Create new base": false,
+      "omnisearch:Omnisearch": false
     }
   },
-  "active": "15f3734c47829697",
+  "active": "1a28f5d484481d92",
   "lastOpenFiles": [
+    "Icon rendering.md",
+    "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
+    "03 - Case Studies/Case Study - News Feed (e.g. Facebook) 2.md",
     "IMP CONCEPTS.md",
+    "04 - Detailed Explanations/Why Entity Ranges are recommended.md",
+    "04 - Detailed Explanations/Rendering rich text safely (XSS prevention).md",
+    "04 - Detailed Explanations",
+    "02 - Core Concepts/Infinite Scrolling.md",
+    "02 - Core Concepts/Virtualized Lists.md",
+    "Untitled test.png",
+    "02 - Core Concepts/Untitled.md",
+    "02 - Core Concepts/State Management.md",
+    "02 - Core Concepts/Networking and APIs.md",
+    "AGENTS.md",
+    "03 - Case Studies/News Feed Architecture Diagram.png",
+    "03 - Case Studies/News Feed Example.png",
     "FE Interview Prep/03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
     "FE Interview Prep/02 - Core Concepts/Accessibility (A11y).md",
     "FE Interview Prep/02 - Core Concepts/Caching Strategies.md",
@@ -259,24 +266,12 @@
     "FE Interview Prep/01 - Guidebook/03 - RADIO Framework.md",
     "FE Interview Prep/00 - MOC/canvas.canvas",
     "FE Interview Prep/00 - MOC/FE SD - MOC.md",
-    "FE Interview Prep/01 - Guidebook/FE vs BE System Design.md",
-    "FE Interview Prep/01 - Guidebook/02 - FE SD - Types of Questions.md",
-    "FE Interview Prep/01 - Guidebook/06 - FE SD - Cheatsheet.md",
-    "FE Interview Prep/01 - Guidebook/05 - FE SD - Common Mistakes.md",
-    "FE Interview Prep/01 - Guidebook/04 - FE SD - Evaluation Axes.md",
-    "I — Interface definition (API design).md",
-    "FE Interview Prep/01 - Guidebook/01 - FE SD - Introduction.md",
-    "FE Interview Prep/01 - Guidebook/RADIO Framework.md",
-    "FE Interview Prep/01 - Guidebook/FE SD - Evaluation Axes.md",
-    "FE Interview Prep/01 - Guidebook/FE SD - Cheatsheet.md",
-    "FE Interview Prep/01 - Guidebook/FE SD - Common Mistakes.md",
     "FE Interview Prep/04 - Eval & Mistakes",
     "FE Interview Prep/02 - Framework",
     "FE Interview Prep/01 - Guidebook",
     "FE Interview Prep/05 - Eval Criteria",
     "FE Interview Prep/03 - Case Studies",
     "FE Interview Prep/03 - Question Types",
-    "FE Interview Prep/02 - Core Concepts",
-    "FE Interview Prep/01 - Framework"
+    "FE Interview Prep/02 - Core Concepts"
   ]
 }

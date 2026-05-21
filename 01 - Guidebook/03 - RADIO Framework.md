@@ -105,7 +105,7 @@ Draw a diagram. Components = rectangles. Arrows = data flowing between them. Lab
 After drawing the diagram, **verbally describe the responsibility of each box**.
 
 ### Example: News Feed architecture
-![[News Feed architecture.png]]
+![[News Feed Architecture Diagram.png]]
 
 | Component         | Responsibility                                                                                  |
 | ----------------- | ----------------------------------------------------------------------------------------------- |

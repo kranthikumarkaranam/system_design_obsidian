@@ -1,17 +1,379 @@
-/* Size */
-
-.markdown-preview-view .mermaid svg {
-  max-width: 780px !important;
-  height: auto !important;
-  margin: auto;
-}
+/* GreatFrontend-style Mermaid diagrams for revision */
 
 .markdown-preview-view .mermaid {
-  zoom: 0.9;
-  border: 1px solid #25262b;
-  border-radius: 6px;
-  padding-left: 0px;
-  padding-right: 80px;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  --mermaid-bg: #242528;
+  --mermaid-panel-bg: #242528;
+  --mermaid-cell-bg: #0b0b0c;
+  --mermaid-cell-alt-bg: #2b2c2e;
+  --mermaid-border: #a9a9a9;
+  --mermaid-text: #d1d1d1;
+  --mermaid-muted-text: #c7c7c7;
+  --mermaid-label-bg: #242528;
+
+  zoom: 1;
+  background: var(--mermaid-panel-bg);
+  border: 1px solid #2b2c2f;
+  border-radius: 8px;
+  padding: 36px 28px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.markdown-preview-view .mermaid,
+.markdown-preview-view .mermaid * {
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+}
+
+.markdown-preview-view .mermaid svg {
+  max-width: 100% !important;
+  height: auto !important;
+  margin: auto;
+  display: block;
+  background: var(--mermaid-bg) !important;
+  background-color: var(--mermaid-bg) !important;
+  color: var(--mermaid-text) !important;
+}
+
+/* Mermaid injects light background shapes inside the SVG in some Obsidian builds. */
+.markdown-preview-view .mermaid svg rect,
+.markdown-preview-view .mermaid svg .background,
+.markdown-preview-view .mermaid svg .er,
+.markdown-preview-view .mermaid svg [class*="background"] {
+  fill: var(--mermaid-bg) !important;
+  background: var(--mermaid-bg) !important;
+  background-color: var(--mermaid-bg) !important;
+}
+
+.markdown-preview-view .mermaid svg rect[width][height]:first-child,
+.markdown-preview-view .mermaid svg > g > rect:first-child {
+  fill: var(--mermaid-bg) !important;
+}
+
+/* Global text */
+.markdown-preview-view .mermaid svg text,
+.markdown-preview-view .mermaid svg tspan,
+.markdown-preview-view .mermaid svg .label,
+.markdown-preview-view .mermaid svg .nodeLabel,
+.markdown-preview-view .mermaid svg .edgeLabel {
+  fill: var(--mermaid-text) !important;
+  color: var(--mermaid-text) !important;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+  font-size: 10.5px !important;
+  font-weight: 400 !important;
+}
+
+/* ER diagram entity boxes */
+.markdown-preview-view .mermaid svg .er.entityBox,
+.markdown-preview-view .mermaid svg .er.entityLabelBox,
+.markdown-preview-view .mermaid svg .entityBox,
+.markdown-preview-view .mermaid svg .entityLabelBox {
+  fill: #202123 !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+.markdown-preview-view .mermaid svg .er.attributeBoxOdd,
+.markdown-preview-view .mermaid svg .attributeBoxOdd {
+  fill: var(--mermaid-cell-alt-bg) !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+.markdown-preview-view .mermaid svg .er.attributeBoxEven,
+.markdown-preview-view .mermaid svg .attributeBoxEven {
+  fill: var(--mermaid-cell-bg) !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+.markdown-preview-view .mermaid svg .er.entityLabel,
+.markdown-preview-view .mermaid svg .entityLabel {
+  fill: var(--mermaid-text) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+}
+
+.markdown-preview-view .mermaid svg .er.attributeKey,
+.markdown-preview-view .mermaid svg .er.attributeType,
+.markdown-preview-view .mermaid svg .er.attributeName,
+.markdown-preview-view .mermaid svg .attributeKey,
+.markdown-preview-view .mermaid svg .attributeType,
+.markdown-preview-view .mermaid svg .attributeName {
+  fill: var(--mermaid-text) !important;
+  font-size: 9.5px !important;
+  font-weight: 400 !important;
+}
+
+.markdown-preview-view .mermaid svg .er.attributeType,
+.markdown-preview-view .mermaid svg .attributeType {
+  font-weight: 500 !important;
+}
+
+/* ER relationship lines and labels */
+.markdown-preview-view .mermaid svg .er.relationshipLine,
+.markdown-preview-view .mermaid svg .relationshipLine {
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+  fill: none !important;
+}
+
+.markdown-preview-view .mermaid svg .er.relationshipLabelBox,
+.markdown-preview-view .mermaid svg .relationshipLabelBox {
+  fill: var(--mermaid-label-bg) !important;
+  opacity: 1 !important;
+}
+
+.markdown-preview-view .mermaid svg .er.relationshipLabel,
+.markdown-preview-view .mermaid svg .relationshipLabel {
+  fill: var(--mermaid-muted-text) !important;
+  font-size: 9.5px !important;
+  font-weight: 400 !important;
+}
+
+/* ER endpoints/cardinality markers. */
+.markdown-preview-view .mermaid svg circle {
+  fill: #f2f2f2 !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+/* Flowcharts and class diagrams inherit the same neutral card style. */
+.markdown-preview-view .mermaid svg .node rect,
+.markdown-preview-view .mermaid svg .node circle,
+.markdown-preview-view .mermaid svg .node ellipse,
+.markdown-preview-view .mermaid svg .node polygon,
+.markdown-preview-view .mermaid svg .node path {
+  fill: #202123 !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1.2px !important;
+}
+
+.markdown-preview-view .mermaid svg .cluster rect {
+  fill: #202123 !important;
+  stroke: #6f7074 !important;
+  stroke-width: 1px !important;
+}
+
+.markdown-preview-view .mermaid svg .edgePath .path,
+.markdown-preview-view .mermaid svg .flowchart-link,
+.markdown-preview-view .mermaid svg .messageLine0,
+.markdown-preview-view .mermaid svg .messageLine1,
+.markdown-preview-view .mermaid svg .loopLine {
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1.2px !important;
+}
+
+.markdown-preview-view .mermaid svg marker path,
+.markdown-preview-view .mermaid svg marker polygon {
+  fill: var(--mermaid-bg) !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+.markdown-preview-view .mermaid svg .edgeLabel,
+.markdown-preview-view .mermaid svg .labelBkg {
+  background: var(--mermaid-label-bg) !important;
+  fill: var(--mermaid-label-bg) !important;
+  color: var(--mermaid-muted-text) !important;
+}
+
+/* On mobile, we reduce the overall scale (zoom) and font sizes to make the design smaller */
+@media (max-width: 480px) {
+  .markdown-preview-view .mermaid {
+    zoom: 0.75; /* Shrink the entire component */
+    padding: 18px 12px;
+  }
+
+  /* Target text elements within Mermaid to ensure they scale down */
+  .markdown-preview-view .mermaid svg text {
+    font-size: 11px !important;
+  }
+
+  .markdown-preview-view .mermaid svg {
+    /* We remove the min-width to allow it to scale down more aggressively */
+    min-width: unset;
+    max-width: 100% !important;
+  }
+}
+
+/* Final Obsidian renderer override.
+   Newer Obsidian views do not always place Mermaid under .markdown-preview-view. */
+.mermaid {
+  --mermaid-bg: #242528;
+  --mermaid-panel-bg: #242528;
+  --mermaid-cell-bg: #0b0b0c;
+  --mermaid-cell-alt-bg: #2b2c2e;
+  --mermaid-border: #a9a9a9;
+  --mermaid-text: #d1d1d1;
+  --mermaid-muted-text: #c7c7c7;
+
+  background: var(--mermaid-panel-bg) !important;
+  background-color: var(--mermaid-panel-bg) !important;
+  border-color: #2b2c2f !important;
+}
+
+.mermaid svg,
+.mermaid svg g,
+.mermaid svg rect,
+.mermaid svg .background,
+.mermaid svg [class*="background"],
+.mermaid svg [class*="Background"] {
+  background: var(--mermaid-panel-bg) !important;
+  background-color: var(--mermaid-panel-bg) !important;
+  fill: var(--mermaid-panel-bg) !important;
+}
+
+.mermaid svg text,
+.mermaid svg tspan {
+  fill: var(--mermaid-text) !important;
+  color: var(--mermaid-text) !important;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+  font-size: 9px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+}
+
+.mermaid svg .entityBox,
+.mermaid svg .entityLabelBox,
+.mermaid svg .er.entityBox,
+.mermaid svg .er.entityLabelBox {
+  fill: #202123 !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+.mermaid svg .attributeBoxOdd,
+.mermaid svg .er.attributeBoxOdd {
+  fill: var(--mermaid-cell-alt-bg) !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+.mermaid svg .attributeBoxEven,
+.mermaid svg .er.attributeBoxEven {
+  fill: var(--mermaid-cell-bg) !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+.mermaid svg .entityLabel,
+.mermaid svg .er.entityLabel {
+  fill: var(--mermaid-text) !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+}
+
+.mermaid svg .attributeKey,
+.mermaid svg .attributeType,
+.mermaid svg .attributeName,
+.mermaid svg .er.attributeKey,
+.mermaid svg .er.attributeType,
+.mermaid svg .er.attributeName {
+  fill: var(--mermaid-text) !important;
+  font-size: 8.5px !important;
+  font-weight: 400 !important;
+}
+
+.mermaid svg .attributeType,
+.mermaid svg .er.attributeType {
+  font-weight: 500 !important;
+}
+
+.mermaid svg .relationshipLine,
+.mermaid svg .er.relationshipLine,
+.mermaid svg .edgePath .path,
+.mermaid svg .flowchart-link {
+  fill: none !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+.mermaid svg .relationshipLabelBox,
+.mermaid svg .er.relationshipLabelBox,
+.mermaid svg .labelBkg {
+  fill: var(--mermaid-panel-bg) !important;
+  opacity: 1 !important;
+}
+
+.mermaid svg .relationshipLabel,
+.mermaid svg .er.relationshipLabel,
+.mermaid svg .edgeLabel {
+  color: var(--mermaid-muted-text) !important;
+  fill: var(--mermaid-muted-text) !important;
+  font-size: 8.5px !important;
+  font-weight: 400 !important;
+}
+
+.mermaid svg circle {
+  fill: #f2f2f2 !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+.mermaid svg marker path,
+.mermaid svg marker polygon {
+  fill: var(--mermaid-panel-bg) !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+/* Overflow fix for ER diagrams.
+   Mermaid calculates box width before CSS is applied, so use a compact font here. */
+.mermaid svg .entityLabel,
+.mermaid svg .attributeKey,
+.mermaid svg .attributeType,
+.mermaid svg .attributeName,
+.mermaid svg .relationshipLabel,
+.mermaid svg .er.entityLabel,
+.mermaid svg .er.attributeKey,
+.mermaid svg .er.attributeType,
+.mermaid svg .er.attributeName,
+.mermaid svg .er.relationshipLabel {
+  font-family:
+    "Arial", "Roboto Condensed", "Segoe UI Condensed", "Arial", sans-serif !important;
+  letter-spacing: 0 !important;
+}
+
+.mermaid svg .entityLabel,
+.mermaid svg .er.entityLabel {
+  font-size: 8.5px !important;
+  font-weight: 500 !important;
+}
+
+.mermaid svg .attributeKey,
+.mermaid svg .attributeType,
+.mermaid svg .attributeName,
+.mermaid svg .er.attributeKey,
+.mermaid svg .er.attributeType,
+.mermaid svg .er.attributeName {
+  font-size: 6.8px !important;
+  font-weight: 400 !important;
+}
+
+.mermaid svg .relationshipLabel,
+.mermaid svg .er.relationshipLabel {
+  font-size: 7px !important;
+  font-weight: 400 !important;
 }

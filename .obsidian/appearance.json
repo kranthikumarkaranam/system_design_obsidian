@@ -2,5 +2,7 @@
   "enabledCssSnippets": [
     "mermaid"
   ],
-  "theme": "system"
+  "theme": "system",
+  "baseFontSize": 14,
+  "baseFontSizeAction": true
 }

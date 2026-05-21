@@ -20,6 +20,8 @@ Real-life examples:
 
 > Design a web news feed application that lets users browse a feed of posts, react to posts, and create new posts.
 
+![[News Feed Example.png|416]]
+
 Assume: primarily text and image posts. Focus on FE architecture and the client/server contract for loading, rendering, and updating the feed.
 
 Real-life examples: Facebook, Twitter, Quora, Reddit.
@@ -83,7 +85,7 @@ To keep LCP competitive in CSR: tight budgets on app-shell bytes, initial feed d
 **SPA wins** because: post data already in the store → navigating to post detail feels instant. MPA discards cached entities, optimistic updates, composer drafts, and scroll position on every navigation.
 
 ### Architecture layers (4 layers)
-![[News Feed architecture.png|522]]
+![[News Feed Architecture Diagram.png|522]]
 
 |Layer|Responsibility|Examples|
 |---|---|---|
@@ -205,6 +207,44 @@ type Store = {
 };
 ```
 
+#### Normalized client store entity relationships (Mermaid )
+```mermaid
+erDiagram
+
+    FEED {
+        string id
+        string[] postIds
+        string olderCursor
+        string newerCursor
+    }
+
+    POST {
+        string id
+        string authorId
+        string[] mediaIds
+    }
+
+    USER {
+        string id
+        string name
+        string handle
+    }
+
+    MEDIA {
+        string id
+        string src
+    }
+
+    COMPOSER_DRAFT {
+    }
+
+    FEED ||--o{ POST : postIds
+    POST }o--|| USER : authorId
+    POST }o--o{ MEDIA : mediaIds
+    COMPOSER_DRAFT ||--o{ MEDIA : mediaIds
+```
+
+
 > ⭐ ==**Do not model the feed as a nested array of full post objects**==
 > Denormalized (`NestedPost { id, author: User, media: Media[] }`) means one profile update requires finding and rewriting every embedded copy. Normalization means `usersById[id]` change reflects everywhere instantly.
 
@@ -225,7 +265,7 @@ _Further reading: [Making Instagram.com faster: Part 3, cache first](https://in
 
 > ℹ️ ==**Feed identity should come from the authenticated session**==
 > A caller-supplied `userId` is not a safe source of truth. Trusting the session instead avoids security mistakes and unnecessary API differences based on who the caller claims to be.
-### Fetch feed — `GET /feed`
+### Fetch feed 
 
 ```
 GET /feed
@@ -235,8 +275,7 @@ Auth:   Session cookie (NOT caller-supplied userId — security risk)
 
 > 💡 Use `direction: 'older'` for infinite scroll down, `direction: 'newer'` for background stale-check. `count` adapts based on `window.innerHeight` in CSR (server doesn't know viewport size so it overfetches slightly on SSR initial load).
 
-### Pagination: cursor-based vs offset-based
-
+#### Pagination: cursor-based vs offset-based
 
 |                | Offset-based                                            | Cursor-based                              |
 | -------------- | ------------------------------------------------------- | ----------------------------------------- |
@@ -251,7 +290,7 @@ Auth:   Session cookie (NOT caller-supplied userId — security risk)
 
 _Reference: [Evolving API Pagination at Slack](https://slack.engineering/evolving-api-pagination-at-slack)_
 
-### Dynamic loading count
+#### Dynamic loading count
 
 The feed API exposes a `count` or `limit` parameter alongside the cursor. Use this to adapt how many posts to fetch based on the actual viewport height:
 
@@ -259,7 +298,7 @@ The feed API exposes a `count` or `limit` parameter alongside the cursor. Use th
 - **SSR flow:** Server doesn't know viewport height ahead of time → overfetch slightly on first load. Subsequent fetches adapt based on measured viewport height.
 
 
-### HTTP caching, deduplication, and idempotency
+#### HTTP caching, deduplication, and idempotency
 
 - Feed + single-post responses: short-lived `Cache-Control` headers + `ETag` → cheap `304 Not Modified` revalidation. `stale-while-revalidate` lets client paint cached data while background fetch refreshes.
 - **In-flight deduplication:** Data access layer coalesces identical in-flight requests and cancels superseded ones via `AbortController`. TanStack Query and Relay do this by default.
@@ -271,16 +310,26 @@ The feed API exposes a `count` or `limit` parameter alongside the cursor. Use th
 
 ### Other endpoints
 
-|Endpoint|Purpose|
-|---|---|
-|`GET /posts/{postId}`|Fetch single post for detail/permalink page|
-|`PUT /posts/{postId}/reaction`|Set or change viewer's reaction|
-|`DELETE /posts/{postId}/reaction`|Remove viewer's reaction|
-|`POST /posts`|Create new post — body: `{ body: PostBody, mediaIds: string[] }`|
-|`POST /media/uploads`|Upload media binary first → returns `mediaId` (or presigned URL for direct blob storage upload)|
+| Endpoint                          | Purpose                                                                                       |
+| --------------------------------- | --------------------------------------------------------------------------------------------- |
+| `GET /posts/{postId}`             | Fetch single post for detail/permalink page                                                   |
+| `PUT /posts/{postId}/reaction`    | Set or change viewer's reaction                                                               |
+| `DELETE /posts/{postId}/reaction` | Remove viewer's reaction                                                                      |
+| `POST /posts`                     | Create new post — body: `{ body: PostBody, mediaIds: string[] }`                              |
+| `POST /media/uploads`             | Upload media binary first → returns `mediaId` or presigned URL for direct blob storage upload |
 
-### Post creation
+### Post Creation flow
 
+**Media upload first (if attachments exist):**
+1. `POST /media/uploads` → receive `mediaId` (or presigned URL for direct blob upload)
+2. `POST /posts` with `{ body: PostBody, mediaIds: [mediaId] }`
+
+> ✅ **==Upload media binaries first, then create the post by `mediaId`==**
+> In production, the upload endpoint returns a presigned URL so the client uploads directly to blob storage — keeping large binaries off the application server and letting post creation stay a small JSON request.
+
+For simplicity, we'll assume attachments are directly uploaded to the app server and a `mediaId` is returned.
+
+**Response shape:**
 ```json
 {
   "post": {
@@ -311,18 +360,20 @@ The feed API exposes a `count` or `limit` parameter alongside the cursor. Use th
 }
 ```
 
-Client merges users + media into their collections, prepends new `post.id` to `feed.postIds`.
+**Client after receiving response:**
+- Merge `users` into `usersById`
+- Merge `media` into `mediaById`
+- Prepend new `post.id` to `feed.postIds`
+- If using optimistic UI: insert temporary local post immediately → reconcile with canonical server `id` on success
 
-> 💡 **Upload media binary first, get `mediaId`, then create post with `mediaId`.** In production, upload endpoint returns presigned URL so binary goes directly to blob storage — keeping post creation a small JSON request.
-
-### Post creation flow with media upload and optimistic UI
+#### Post creation flow with media upload and optimistic UI (Mermaid Diagram)
 
 ```mermaid
 sequenceDiagram
-    participant U as User (Composer)
-    participant C as Client (store + data access)
-    participant M as Media upload
-    participant P as Post creation
+    participant U as User
+    participant C as Client (Store/Data)
+    participant M as Media API
+    participant P as Post API
 
     U->>C: Submit draft (text + media binary)
 
@@ -344,6 +395,9 @@ sequenceDiagram
 
 ## O — Optimizations and deep dive
 
+> ⭐ **==This section is intentionally deeper than the minimum interview answer==**
+> In most interviews, cover the core architecture first and use these optimizations only as follow-up depth when the interviewer asks you to go further.
+
 ### O1 — Feed list
 
 #### Virtualized lists
@@ -361,27 +415,35 @@ Facebook and Twitter both use virtualized lists.
 
 **Virtualization tradeoffs to name proactively:**
 
-- Focused element scrolled out of viewport gets unmounted → loses focus. Fix: keep recently focused items mounted OR restore focus programmatically on remount.
-- `Ctrl/Cmd+F` find-in-page only searches present DOM. Fix: widen overscan when find-in-page is invoked, or offer in-app search.
+- Focused element scrolled out of viewport gets unmounted → loses focus.
+	***Fix:*** keep recently focused items mounted OR restore focus programmatically on remount.
+- `Ctrl/Cmd+F` find-in-page only searches present DOM. 
+	***Fix:*** widen overscan when find-in-page is invoked via a keydown hint, or offer in-app search.
 
 #### Infinite scrolling — implementation
 
-Render a sentinel element at the bottom of the feed. Two approaches:
+Render a sentinel element at the bottom of the feed and detect when it enters the viewport.
 
-|Approach|How|Verdict|
+| Approach | How | Verdict |
 |---|---|---|
-|`scroll` event listener|Throttled listener + `Element.getBoundingClientRect()`|❌ Synchronous, forces layout on every scroll|
-|**Intersection Observer API**|Browser callback when sentinel enters viewport|✅ Preferred — browser-optimized, no layout forcing|
+| `scroll` event listener | Throttled listener + `Element.getBoundingClientRect()` | ❌ Runs synchronously, forces layout on every scroll |
+| **Intersection Observer API** | Browser callback when sentinel enters viewport | ✅ Preferred — browser-batched, no layout forcing |
 
-> 💡 **Use Intersection Observer** for infinite-scroll triggers AND prefetch boundaries. Prefetch the next page when sentinel is ~1 viewport height away — users never see a loading state.
+> ✅ ==**Prefer Intersection Observer over scroll + `getBoundingClientRect()`**==
+> Use it for infinite-scroll triggers and prefetch boundaries. Scroll handlers run synchronously and `getBoundingClientRect()` can force layout; Intersection Observer lets the browser batch visibility checks and deliver callbacks without your code polling layout on every scroll.
 
-Trigger distance: ~1 viewport height. Can be dynamic based on connection speed and scroll velocity.
+**Trigger distance:** ~1 viewport height — wide enough to load before the user hits the bottom, narrow enough to avoid wasted fetches. Can be made dynamic based on network speed and scroll velocity.
+
+The same IO instance can double as a **prefetch boundary**, so users rarely see a loading state at all.
+
+see more: [[Infinite Scrolling]]
 
 #### Loading indicators
 
 - **Avoid** a single spinner — doesn't preserve layout
 - **Use** skeleton placeholders matching post structure → users scan layout immediately, real content swaps in with minimal visual jump
 - A shimmer animation can layer on top of the skeleton
+see more:  [shimmer loading effect](https://docs.flutter.dev/cookbook/effects/shimmer-loading)
 
 #### Scroll position restoration
 
@@ -400,70 +462,96 @@ Three approaches when `lastFetchedAt` is old:
 2. **Silently prepend new posts** — ❌ disrupts user's reading position
 3. **"New posts available" banner** ✅ — preserves reading position, user controls when to merge
 
-> 💡 **The banner approach is the best default.** Fetch newer posts in the background, show banner, user taps to merge when ready.
+> ℹ️ **==Avoid silently prepending new posts while the user is reading==**
+> A banner such as "New posts available" is usually safer because it preserves reading position and lets the user choose when to merge newer content.
 
 **Beyond time-based staleness:**
 
 - **Server-driven invalidation:** server pushes a version/high-water-mark over the live-update channel. Viral posts or deleted posts reflect immediately without waiting for a refresh check.
 - **Cross-tab invalidation:** User with two tabs — reacting in one leaves the other stale. Fix: `BroadcastChannel` that Data access layer writes to on every canonical entity mutation. Peer tabs subscribe and re-read the affected record. With IndexedDB-backed store, `Web Locks API` can elect a leader tab to own long-lived socket or polling state.
 
+> ℹ️ **==Pair optimistic updates with a cross-tab invalidation signal==**
+> Shared storage alone does not notify other tabs of changes. Without a `BroadcastChannel` or equivalent, a reaction applied in one tab will sit stale in another tab until the user interacts with it.
+
 ---
 
 ### O2 — Feed post optimizations
 
-#### Data-driven dependencies (Facebook's approach)
+#### Delivering data-driven dependencies only when needed (Facebook's approach)
 
 **Problem:** Facebook feed supports 50+ post formats. Loading all renderers upfront = massive unused JS.
 
-**Solution:** Relay's `@match` and `@module` GraphQL directives. GraphQL payload includes metadata about which renderer to load. Client fetches only the matched renderer dynamically.
+**Solution:** Facebook fetches data from the server using [Relay](https://relay.dev/), which is a JavaScript-based GraphQL client. Relay couples React components with GraphQL to allow React components to declare exactly which data fields are needed, and Relay will fetch them via GraphQL and provide the components with data. Relay has a feature called [data-driven dependencies](https://relay.dev/docs/glossary/#match) via the `@match` and `@module` GraphQL directives. The GraphQL payload can include metadata describing which renderer module matches the returned data, and the client then loads that module dynamically.
 
 ```graphql
+# Sample GraphQL query to demonstrate data-driven dependencies.
 ... on Post {
   content @match {
     ...TextPostFragment @module(name: "TextComponent.react")
     ...ImagePostFragment @module(name: "ImageComponent.react")
   }
 }
+
 ```
 
-Server selects the matching data branch + returns module name. Client lazy-loads only that renderer.
+The `@match` directive on the `content` field tells Relay that the selection is type-conditional, and each fragment spread is paired with `@module(name: ...)` to declare which component renders that type. At query time, the server selects the matching data branch and returns module metadata alongside the GraphQL payload. The client still loads the matching JavaScript module dynamically, but only for the renderer that is actually needed.
 
-Also applies to: hover cards, richer composer tools, interaction-heavy widgets.
+This idea applies to: hover cards, richer composer tools, interaction-heavy widgets — anything interaction-heavy that isn't needed on first paint.
 
-**Caveat:** Dynamic renderer chunks can create data-then-code waterfall. Common above-the-fold renderers should be prefetched after initial feed payload resolves.
+**Caveat:** Dynamic renderer chunks can create a data-then-code waterfall. Common above-the-fold renderers should be part of **Tier 2** loading or prefetched once the initial feed payload makes their need likely — so the first visible posts don't wait on a second round-trip.
 
-#### Rendering mentions/hashtags — post body format
+_Source: [Rebuilding our tech stack for the new Facebook.com](https://engineering.fb.com/2020/05/08/web/facebook-redesign/)_
 
-3 options for storing post text with metadata:
+#### Rendering mentions/hashtags
 
-|Format|How|Verdict|
-|---|---|---|
-|**Entity ranges** ✅|Store plaintext + array of `{ type, start, end, userId?, url? }`|Recommended for server/client contract — compact, platform-agnostic|
-|Custom syntax|`[[#1234: HBO Max]]` inline|Lightweight for simple cases, hard to extend|
-|Rich text editor format|Lexical/TipTap/Slate tree structure|Better for editing; too verbose for wire format|
-|**HTML** ❌|Store rendered HTML|**NEVER** — direct XSS vector, couples API to web-only|
+4 options for storing post text with metadata:
 
-> 💡 Entity ranges are `start` inclusive, `end` exclusive — matches `String.prototype.slice`. State this explicitly in interviews — off-by-one silently breaks mention boundaries at render time.
+| Format                  | How                                                                    | Verdict                                    |
+| ----------------------- | ---------------------------------------------------------------------- | ------------------------------------------ |
+| **Entity ranges** ✅     | Plaintext + array of `{ type, start, end, userId?, url? }`             | Recommended — compact, platform-agnostic   |
+| Custom syntax           | `[[#1234: HBO Max]]` inline; hashtags via `#word` regex at render time | Lightweight; hard to extend                |
+| Rich text editor format | Blocks of text + side entity table (Lexical, TipTap, Slate, Draft.js)  | Good for editing; too verbose for the wire |
+| **HTML** format ❌       | Store rendered HTML                                                    | **Never** — XSS vector, web-only coupling  |
+**Entity ranges:** Store the plaintext once and attach metadata describing which character ranges correspond to mentions, hashtags, or links. Compact because text is stored exactly once and easy to render on any client. Edits become trickier — inserting or deleting characters requires updating indexes — but that's a composer concern, not a storage concern. The editor can keep a richer tree model internally and serialize to entity ranges at the API boundary.
+
+> ℹ️ **==In the example above, `start` is inclusive and `end` is exclusive==**
+> This is a half-open range matching `String.prototype.slice` semantics. Stating the convention explicitly matters because an off-by-one here silently breaks mention and link boundaries at render time.
+
+*detailed explanation*: [[Why Entity Ranges are recommended]]
+
+**Custom syntax:** Captures entity ID + user-customizable display text inline (e.g. `[[#1234: HBO Max]]`). Hashtags need no special syntax — a `#word` regex at render time is enough. A good fit for products that don't anticipate growing the set of rich-text entity types.
+
+**Rich text editor format:** Frameworks like [Lexical](https://lexical.dev/), [TipTap](https://tiptap.dev/api/editor), and [Slate](https://www.slatejs.org/) serialize as blocks of text plus a side table of entities keyed by ID. Met's [Draft.js](https://draftjs.org/) (deprecated) is a useful reference for the shape: `RawDraftContentState` is an array of `blocks` (raw text + entity ranges over character offsets) plus a separate `entityMap`. These formats extend naturally to more entity types but are verbose on the wire — prefer compact entity ranges for the server/client contract even when the editor internally uses a tree model.
+
+**HTML format (anti-pattern):** Beyond being an XSS vector, stored HTML couples the API to web-specific markup — the same payload becomes hard to reuse on iOS, Android, or any non-web client. It also makes it harder to re-decorate mentions or hashtags later (e.g. adding hover cards, updating display names).
+
+
+>⚠️**==Do not store user-generated post content as raw HTML on the server==**
+>Rendering server-stored HTML is a direct XSS vector, and it also couples the API to web-specific markup, making the same payload harder to reuse on iOS, Android, or any non-web client.
+
 
 #### Rendering rich text safely (XSS prevention)
 
 Entity ranges close the storage-level XSS door — but not all render-time doors:
 
-- **Output encode:** Modern frameworks (React, Vue, Svelte) escape text by default. Never use `dangerouslySetInnerHTML` unless content passed through a sanitizer like DOMPurify.
+- **Output encode:** Modern frameworks (React, Vue, Svelte) escape text by default. Never use `dangerouslySetInnerHTML` unless content passed through a sanitizer like [DOMPurify](https://github.com/cure53/DOMPurify)
 - **Validate `href` URL schemes:** Mention/link entities can carry `javascript:`, `data:`, or `vbscript:` URLs. Allowlist only `http`, `https`, `mailto` — reject/strip everything else **at render time**, not only at submission.
 - **Harden outbound links:** `rel="noopener noreferrer"` on every `target="_blank"` link — prevents `window.opener` tab-nabbing.
 - **Content Security Policy:** `default-src 'self'`, tight `script-src`, `img-src` allowlist for the product's media CDN. Defence-in-depth for feed products that render links, images, and embeds from arbitrary third-party sources.
 
-> 💡 **Never store user-generated post content as raw HTML.** XSS vector + couples API to web-only markup.
+> ⚠️ **==Validate every user-controlled URL scheme before rendering==**
+> `javascript:` and `data:` URLs in mention or link entities render as clickable bombs. Allowlist `http`, `https`, and `mailto`; reject everything else at render time, not only at submission time.
+
+*detailed explanation*: [[Rendering rich text safely (XSS prevention)]]
 
 #### Rendering images
 
 - **CDN** for hosting + serving images
-- **Modern formats:** AVIF (smallest files) → WebP → JPEG/PNG fallback via `<picture>` chain
-- **Alt text:** Facebook uses ML/CV to generate alt text for user-uploaded images
+- **Modern formats:** AVIF (smallest files, but slightly narrower browser support than WebP) → WebP → JPEG/PNG fallback via `<picture>` chain
+- **Alt text:** Facebook uses ML(Machine Learning)/CV(Computer Vision) to generate alt text for user-uploaded images
 - **Lazy loading:** `loading="lazy"` as default. `IntersectionObserver` for more control (start loading before viewport entry)
 - **Responsive images:** `srcset` / `<picture>` for different viewport sizes. Send browser dimensions in feed requests so server returns the right image size.
-- **Reserve space before load:** Include `width` + `height` in payload. Set on `<img>` element (or CSS `aspect-ratio`) so browser computes layout box before bytes arrive → reduces CLS.
+- **Reserve space before load:** Include `width` + `height` in payload. Set on `<img>` element (or CSS `aspect-ratio`) so browser computes layout box before bytes arrive → reduces CLS(Cumulative Layout Shift).
 - **Adaptive by network:** Good connection → prefetch offscreen images. Poor connection → low-res placeholder, require user tap for full image.
 - **Progressive placeholders:** LQIP / BlurHash-style blurred previews
 
@@ -471,7 +559,12 @@ Entity ranges close the storage-level XSS door — but not all render-time doors
 
 - Strip EXIF metadata (GPS coordinates, camera serial number, timestamps) — re-encode through `<canvas>` to drop the EXIF block
 - Honor EXIF orientation flag before re-encoding (portrait photos from iOS render sideways otherwise)
-- Client-side resize to max display size → reduces upload bandwidth + server rescale work
+- Client-side resize to max display size → reduces upload bandwidth on mobile networks + server rescale work
+
+If the feed later supports video, the same principles still apply. Poster frames, deferred playback, and adaptive bitrate streaming are natural follow-up optimizations.
+
+>⚠️ **==Strip EXIF metadata from user-uploaded images before leaving the device==**
+>Camera EXIF blocks routinely contain GPS coordinates and device identifiers. Re-encoding the image through `<canvas>` in the composer both removes the metadata and lets the client apply the orientation flag so portraits do not render sideways.
 
 #### Lazy load code not needed for initial render
 
@@ -499,15 +592,39 @@ Failure: revert to previous state, show error toast
 ```
 
 Works for: reactions, shares, post creation (insert temporary local post, then reconcile with server id).
+##### Reaction flow with optimistic update and rollback (mermaid diagram)
+
+```mermaid
+sequenceDiagram
+
+participant U as User
+participant C as Client (store + view)
+participant S as Server
+
+U->>C: Click reaction
+
+Note over U,C: Apply optimistic update<br/>UI shows new reaction and count
+
+C->>S: Send reaction mutation
+
+alt Success
+    S-->>C: viewerReaction, engagementSummary
+    Note over C: Reconcile, optimistic state confirmed
+
+else Failure
+    S-->>C: Error
+    Note over C: Revert UI, show error toast
+end
+```
 
 **Edge cases to name proactively:**
 
 - Server response is **always authoritative** — if returned `engagementSummary` disagrees with optimistic prediction, server wins even if UI jumps
 - **Racing mutations:** two rapid reaction taps → last-writer-wins or server-sequence-number rule prevents inconsistent state
-- **Offline writes:** land in outbox (covered below) rather than silently vanishing — show pending indicator
-- **Idempotency keys** keep retries safe — server treats replayed reaction as same event, not duplicate
+- **Offline writes:** land in outbox (covered in the resilience section below) rather than silently vanishing — show pending indicator
+- **Idempotency keys** keep retries safe — server treats replayed reaction or post creation as same event, not duplicate
 
-Built into: Relay, SWR, React Query.
+Built into: [Relay](https://relay.dev/docs/guided-tour/updating-data/graphql-mutations/#optimistic-updates), [SWR](https://swr.vercel.app/docs/mutation#optimistic-updates), and [React Query](https://tanstack.com/query/latest/docs/framework/react/overview).
 
 #### Timestamp rendering
 
@@ -521,25 +638,39 @@ Built into: Relay, SWR, React Query.
 
 ```javascript
 // Relative time in Chinese
-new Intl.RelativeTimeFormat('zh-CN', { numeric: 'always', style: 'long' })
-  .format(-1, 'day')  // → "1天前"
+const date = new Date(Date.UTC(2021, 11, 20, 3, 23, 16, 738));
+console.log(
+  new Intl.DateTimeFormat('zh-CN', {
+    dateStyle: 'full',
+    timeStyle: 'long',
+  }).format(date),
+); // 2021年12月20日星期一 GMT+8 11:23:16
+
+console.log(
+  new Intl.RelativeTimeFormat('zh-CN', {
+    numeric: 'always',
+    style: 'long',
+  }).format(-1, 'day'),
+); // 1天前
 ```
 
 **Problem 2: Stale relative timestamps**
 
-"2 minutes ago" can sit on screen for hours in a long-lived session. Fix: a low-frequency timer refreshes timestamps < 1 hour old. Older timestamps stay static — the next bucket boundary (day, week) is far enough away.
+> ✅ **==Refresh recent relative timestamps with a low-frequency timer==**
+> Without it, "2 minutes ago" can sit on screen for hours in a long-lived session. Older timestamps can stay static because the next bucket boundary (days, weeks, months) is far enough away that the user is unlikely to notice drift.
 
 #### Icon rendering
 
-|Approach|Pros|Cons|
-|---|---|---|
-|Separate image|Simple|Multiple HTTP requests|
-|Spritesheet|One HTTP request|Complicated setup|
-|Icon fonts|Scalable, crisp|Screen reader confusion (Unicode PUA), FOUT/FOIT|
-|SVG files|Scalable, cacheable|One request per image, flickering on download|
-|**Inlined SVG** ✅|Scalable, crisp, instant|Not independently cacheable; inflates HTML/JS|
+| Approach        | What it is                          |                    Why good | Main problem                                                                           | Verdict            |
+| --------------- | ----------------------------------- | --------------------------: | -------------------------------------------------------------------------------------- | ------------------ |
+| Separate images | One file per icon (`like.png`)      |                 Very simple | Too many network requests                                                              | ❌ Avoid at scale   |
+| Spritesheet     | Combine all icons into one image    |              Single request | Hard to maintain (`background-position`)                                               | ⚠️ Older technique |
+| Icon fonts      | Icons rendered like text characters |        Scalable + styleable | Accessibility issues + FOUT/FOIT<br><br>Flash of unstyled text/Flash of invisible text | ❌ Mostly outdated  |
+| SVG files       | Separate vector files               |           Crisp + cacheable | One request per icon<br><br>And sometimes Small flicker                                | ⚠️ Acceptable      |
+| **Inline SVG**  | SVG markup directly in HTML         | Instant render + no request | Repeated SVG increases HTML/JS size                                                    | ✅ Preferred        |
+Facebook/Twitter use Inline SVG because immediate rendering matters more than tiny bundle increases — this is the current standard approach.
 
-Facebook and Twitter use inlined SVGs — this is the current standard approach.
+_Source: ["Rebuilding our tech stack for the new Facebook.com" blog post](https://engineering.fb.com/2020/05/08/web/facebook-redesign/)_
 
 #### Post truncation
 
@@ -585,7 +716,7 @@ Load on interaction (user opens the tool) or on idle.
 
 ---
 
-### O4 — Networking, resilience, offline, retries
+### O4 — Networking, resilience, offline, and retries
 
 #### Error states
 
@@ -830,6 +961,7 @@ Use `web-vitals` library to capture LCP, INP, CLS from real sessions → send 
 ## References
 
 ### Feed architecture and rendering
+*These references inform the rendering and high-level architecture choices covered earlier in the article.*
 
 - [Rebuilding our tech stack for the new Facebook.com](https://engineering.fb.com/2020/05/08/web/facebook-redesign/) — overall feed architecture, rendering tiers, data-driven dependencies, route/data loading tradeoffs
 - [Rendering on the Web](https://web.dev/rendering-on-the-web/) — SSR, CSR, hybrid rendering background
@@ -838,6 +970,7 @@ Use `web-vitals` library to capture LCP, INP, CLS from real sessions → send 
 - [Twitter Lite and High Performance React PWAs at Scale](https://medium.com/@paularmstrong/twitter-lite-and-high-performance-react-progressive-web-apps-at-scale-d28a00e780a3)
 
 ### Client state, caching, and pagination
+*These references inform the normalized client store, caching, and pagination discussions in the data model, API, and optimization sections.*
 
 - [Dissecting Twitter's Redux Store](https://medium.com/statuscode/dissecting-twitters-redux-store-d7280b62c6b1) — normalized client-store structure and cross-surface entity reuse
 - [Making Instagram.com faster: Part 1](https://instagram-engineering.com/making-instagram-com-faster-part-1-62cc0c327538) — general web performance from a large feed product
@@ -846,6 +979,7 @@ Use `web-vitals` library to capture LCP, INP, CLS from real sessions → send 
 - [Evolving API Pagination at Slack](https://slack.engineering/evolving-api-pagination-at-slack/) — cursor-based pagination rationale
 
 ### Accessibility and browser platform APIs
+*These sources support the parts of the design that depend on browser primitives and assistive-technology behavior: keyboard access, feed semantics, visibility tracking, and lazy loading.*
 
 - [Making Facebook.com accessible to as many people as possible](https://engineering.fb.com/2020/07/30/web/facebook-com-accessibility/) — feed-specific a11y patterns and keyboard interaction
 - [Intersection Observer API | MDN](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) — infinite scroll triggers and prefetch boundaries

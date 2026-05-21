@@ -1,0 +1,24 @@
+{
+  "recentFiles": [
+    {
+      "basename": "Case Study - News Feed (e.g. Facebook)",
+      "path": "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md"
+    },
+    {
+      "basename": "IMP CONCEPTS",
+      "path": "IMP CONCEPTS.md"
+    },
+    {
+      "basename": "Why Entity Ranges are recommended",
+      "path": "04 - Detailed Explanations/Why Entity Ranges are recommended.md"
+    },
+    {
+      "basename": "Rendering rich text safely (XSS prevention)",
+      "path": "04 - Detailed Explanations/Rendering rich text safely (XSS prevention).md"
+    }
+  ],
+  "omittedPaths": [],
+  "omittedTags": [],
+  "updateOn": "file-open",
+  "omitBookmarks": false
+}

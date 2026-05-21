@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
-                "mode": "preview",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
@@ -144,6 +144,7 @@
         "state": {
           "type": "outline",
           "state": {
+            "file": "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
             "followCursor": false,
             "showSearch": false,
             "searchQuery": ""
@@ -153,10 +154,11 @@
         }
       }
     ],
-    "currentTab": 0
+    "currentTab": 2
   },
   "left-ribbon": {
     "hiddenItems": {
+      "omnisearch:Omnisearch": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
@@ -166,6 +168,16 @@
       "bases:Create new base": false
     }
   },
-  "active": "c6e5df5e217ba96f",
-  "lastOpenFiles": []
+  "active": "0fe939cac61428ea",
+  "lastOpenFiles": [
+    "04 - Detailed Explanations/Why Entity Ranges are recommended.md",
+    "04 - Detailed Explanations/Rendering rich text safely (XSS prevention).md",
+    "04 - Detailed Explanations",
+    "03 - Case Studies/News Feed Architecture Diagram.png",
+    "03 - Case Studies/News Feed Example.png",
+    "AGENTS.md",
+    "03 - Case Studies/Case Study - Autocomplete.md",
+    "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
+    "03 - Case Studies/News Feed architecture.png"
+  ]
 }
