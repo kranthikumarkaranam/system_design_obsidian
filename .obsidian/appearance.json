@@ -1,8 +1,11 @@
 {
   "enabledCssSnippets": [
-    "mermaid"
+    "mermaid",
+    "Iterative Rainbow Folder Titles"
   ],
   "theme": "system",
-  "baseFontSize": 14,
-  "baseFontSizeAction": true
+  "baseFontSize": 16,
+  "baseFontSizeAction": false,
+  "nativeMenus": true,
+  "cssTheme": "Obsidianite"
 }

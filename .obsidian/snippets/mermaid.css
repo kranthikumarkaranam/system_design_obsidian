@@ -213,7 +213,10 @@
 
 /* Final Obsidian renderer override.
    Newer Obsidian views do not always place Mermaid under .markdown-preview-view. */
-.mermaid {
+.mermaid,
+.mermaid-zoom-container,
+.mermaid-zoom-modal-wrapper,
+svg[id^="mermaid-"] {
   --mermaid-bg: #242528;
   --mermaid-panel-bg: #242528;
   --mermaid-cell-bg: #0b0b0c;
@@ -221,6 +224,7 @@
   --mermaid-border: #a9a9a9;
   --mermaid-text: #d1d1d1;
   --mermaid-muted-text: #c7c7c7;
+  --mermaid-label-bg: #242528;
 
   background: var(--mermaid-panel-bg) !important;
   background-color: var(--mermaid-panel-bg) !important;
@@ -228,6 +232,8 @@
 }
 
 .mermaid svg,
+.mermaid-zoom-container svg[id^="mermaid-"],
+.mermaid-zoom-modal-wrapper svg[id^="mermaid-"],
 .mermaid svg g,
 .mermaid svg rect,
 .mermaid svg .background,
@@ -304,7 +310,10 @@
 .mermaid svg .relationshipLine,
 .mermaid svg .er.relationshipLine,
 .mermaid svg .edgePath .path,
-.mermaid svg .flowchart-link {
+.mermaid svg .flowchart-link,
+.mermaid svg .messageLine0,
+.mermaid svg .messageLine1,
+.mermaid svg .loopLine {
   fill: none !important;
   stroke: var(--mermaid-border) !important;
   stroke-width: 1px !important;
@@ -319,11 +328,67 @@
 
 .mermaid svg .relationshipLabel,
 .mermaid svg .er.relationshipLabel,
-.mermaid svg .edgeLabel {
+.mermaid svg .edgeLabel,
+.mermaid svg .messageText,
+.mermaid svg .loopText,
+.mermaid svg .labelText,
+.mermaid svg .noteText,
+.mermaid svg .sequenceNumber {
   color: var(--mermaid-muted-text) !important;
   fill: var(--mermaid-muted-text) !important;
   font-size: 8.5px !important;
   font-weight: 400 !important;
+}
+
+/* Sequence diagrams use their own class names, so keep them in the final fallback too. */
+.mermaid svg .actor,
+.mermaid svg rect.actor,
+.mermaid svg .activation0,
+.mermaid svg .activation1,
+.mermaid svg .activation2,
+.mermaid svg .note,
+.mermaid svg .labelBox {
+  fill: #202123 !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+.mermaid svg .actor-line,
+.mermaid svg line.actor-line {
+  stroke: #6f7074 !important;
+  stroke-width: 1px !important;
+  stroke-dasharray: 4 4 !important;
+}
+
+.mermaid svg .messageLine0,
+.mermaid svg .messageLine1 {
+  marker-end: inherit !important;
+}
+
+.mermaid svg .messageText,
+.mermaid svg .actor > tspan,
+.mermaid svg text.actor,
+.mermaid svg .loopText,
+.mermaid svg .labelText,
+.mermaid svg .noteText,
+.mermaid svg .sequenceNumber {
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+  letter-spacing: 0 !important;
+}
+
+.mermaid svg text.actor,
+.mermaid svg .actor > tspan {
+  fill: var(--mermaid-text) !important;
+  color: var(--mermaid-text) !important;
+  font-size: 9px !important;
+  font-weight: 500 !important;
 }
 
 .mermaid svg circle {
@@ -337,6 +402,118 @@
   fill: var(--mermaid-panel-bg) !important;
   stroke: var(--mermaid-border) !important;
   stroke-width: 1px !important;
+}
+
+/* Standalone Mermaid SVG fallback used by some Obsidian render paths and zoom views. */
+svg[id^="mermaid-"] {
+  background: var(--mermaid-panel-bg) !important;
+  background-color: var(--mermaid-panel-bg) !important;
+  color: var(--mermaid-text) !important;
+}
+
+svg[id^="mermaid-"] text,
+svg[id^="mermaid-"] tspan,
+svg[id^="mermaid-"] .label,
+svg[id^="mermaid-"] .nodeLabel,
+svg[id^="mermaid-"] .edgeLabel {
+  fill: var(--mermaid-text) !important;
+  color: var(--mermaid-text) !important;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+  font-size: 9px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+}
+
+svg[id^="mermaid-"] .node rect,
+svg[id^="mermaid-"] .node circle,
+svg[id^="mermaid-"] .node ellipse,
+svg[id^="mermaid-"] .node polygon,
+svg[id^="mermaid-"] .node path,
+svg[id^="mermaid-"] .entityBox,
+svg[id^="mermaid-"] .entityLabelBox,
+svg[id^="mermaid-"] .er.entityBox,
+svg[id^="mermaid-"] .er.entityLabelBox,
+svg[id^="mermaid-"] .actor,
+svg[id^="mermaid-"] rect.actor,
+svg[id^="mermaid-"] .activation0,
+svg[id^="mermaid-"] .activation1,
+svg[id^="mermaid-"] .activation2,
+svg[id^="mermaid-"] .note,
+svg[id^="mermaid-"] .labelBox {
+  fill: #202123 !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+svg[id^="mermaid-"] .attributeBoxOdd,
+svg[id^="mermaid-"] .er.attributeBoxOdd {
+  fill: var(--mermaid-cell-alt-bg) !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+svg[id^="mermaid-"] .attributeBoxEven,
+svg[id^="mermaid-"] .er.attributeBoxEven {
+  fill: var(--mermaid-cell-bg) !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+svg[id^="mermaid-"] .relationshipLine,
+svg[id^="mermaid-"] .er.relationshipLine,
+svg[id^="mermaid-"] .edgePath .path,
+svg[id^="mermaid-"] .flowchart-link,
+svg[id^="mermaid-"] .messageLine0,
+svg[id^="mermaid-"] .messageLine1,
+svg[id^="mermaid-"] .loopLine {
+  fill: none !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+svg[id^="mermaid-"] .actor-line,
+svg[id^="mermaid-"] line.actor-line {
+  stroke: #6f7074 !important;
+  stroke-width: 1px !important;
+  stroke-dasharray: 4 4 !important;
+}
+
+svg[id^="mermaid-"] marker path,
+svg[id^="mermaid-"] marker polygon {
+  fill: var(--mermaid-panel-bg) !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+svg[id^="mermaid-"] .relationshipLabel,
+svg[id^="mermaid-"] .er.relationshipLabel,
+svg[id^="mermaid-"] .edgeLabel,
+svg[id^="mermaid-"] .messageText,
+svg[id^="mermaid-"] .loopText,
+svg[id^="mermaid-"] .labelText,
+svg[id^="mermaid-"] .noteText,
+svg[id^="mermaid-"] .sequenceNumber {
+  color: var(--mermaid-muted-text) !important;
+  fill: var(--mermaid-muted-text) !important;
+  font-size: 8.5px !important;
+  font-weight: 400 !important;
+}
+
+svg[id^="mermaid-"] text.actor,
+svg[id^="mermaid-"] .actor > tspan,
+svg[id^="mermaid-"] .entityLabel,
+svg[id^="mermaid-"] .er.entityLabel {
+  fill: var(--mermaid-text) !important;
+  color: var(--mermaid-text) !important;
+  font-size: 9px !important;
+  font-weight: 500 !important;
 }
 
 /* Overflow fix for ER diagrams.
@@ -376,4 +553,191 @@
 .mermaid svg .er.relationshipLabel {
   font-size: 7px !important;
   font-weight: 400 !important;
+}
+
+/* Theme-aware Mermaid colors.
+   Obsidian puts theme-light/theme-dark on body, so mirror that instead of forcing dark mode. */
+.mermaid,
+.mermaid-zoom-container,
+.mermaid-zoom-modal-wrapper,
+svg[id^="mermaid-"] {
+  --mermaid-bg: #1b1c20;
+  --mermaid-panel-bg: #1b1c20;
+  --mermaid-cell-bg: #0b0b0c;
+  --mermaid-cell-alt-bg: #2b2c2e;
+  --mermaid-border: #c5c7cb;
+  --mermaid-text: #d7d9dd;
+  --mermaid-muted-text: #c9ccd1;
+  --mermaid-label-bg: #1b1c20;
+  --mermaid-sequence-box-bg: #202123;
+  --mermaid-sequence-note-bg: #3f4245;
+  --mermaid-sequence-region-bg: transparent;
+  --mermaid-sequence-region-border: #d0d2d6;
+  --mermaid-sequence-lifeline: #c5c7cb;
+}
+
+body.theme-light .mermaid,
+body.theme-light .mermaid-zoom-container,
+body.theme-light .mermaid-zoom-modal-wrapper,
+body.theme-light svg[id^="mermaid-"],
+.theme-light .mermaid,
+.theme-light .mermaid-zoom-container,
+.theme-light .mermaid-zoom-modal-wrapper,
+.theme-light svg[id^="mermaid-"] {
+  --mermaid-bg: #ffffff;
+  --mermaid-panel-bg: #ffffff;
+  --mermaid-cell-bg: #f8f9fa;
+  --mermaid-cell-alt-bg: #edf0f2;
+  --mermaid-border: #5f6368;
+  --mermaid-text: #202124;
+  --mermaid-muted-text: #3c4043;
+  --mermaid-label-bg: #ffffff;
+  --mermaid-sequence-box-bg: #ffffff;
+  --mermaid-sequence-note-bg: #e5e7eb;
+  --mermaid-sequence-region-bg: transparent;
+  --mermaid-sequence-region-border: #5f6368;
+  --mermaid-sequence-lifeline: #5f6368;
+}
+
+body.theme-dark .mermaid,
+body.theme-dark .mermaid-zoom-container,
+body.theme-dark .mermaid-zoom-modal-wrapper,
+body.theme-dark svg[id^="mermaid-"],
+.theme-dark .mermaid,
+.theme-dark .mermaid-zoom-container,
+.theme-dark .mermaid-zoom-modal-wrapper,
+.theme-dark svg[id^="mermaid-"] {
+  --mermaid-bg: #1b1c20;
+  --mermaid-panel-bg: #1b1c20;
+  --mermaid-cell-bg: #0b0b0c;
+  --mermaid-cell-alt-bg: #2b2c2e;
+  --mermaid-border: #c5c7cb;
+  --mermaid-text: #d7d9dd;
+  --mermaid-muted-text: #c9ccd1;
+  --mermaid-label-bg: #1b1c20;
+  --mermaid-sequence-box-bg: #202123;
+  --mermaid-sequence-note-bg: #3f4245;
+  --mermaid-sequence-region-bg: transparent;
+  --mermaid-sequence-region-border: #d0d2d6;
+  --mermaid-sequence-lifeline: #c5c7cb;
+}
+
+/* Reference-style sequence diagrams. */
+.mermaid svg,
+svg[id^="mermaid-"] {
+  background: var(--mermaid-panel-bg) !important;
+  background-color: var(--mermaid-panel-bg) !important;
+  color: var(--mermaid-text) !important;
+}
+
+.mermaid svg .actor,
+.mermaid svg rect.actor,
+svg[id^="mermaid-"] .actor,
+svg[id^="mermaid-"] rect.actor {
+  fill: var(--mermaid-sequence-box-bg) !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+  rx: 2px !important;
+  ry: 2px !important;
+}
+
+.mermaid svg text.actor,
+.mermaid svg .actor > tspan,
+svg[id^="mermaid-"] text.actor,
+svg[id^="mermaid-"] .actor > tspan {
+  fill: var(--mermaid-text) !important;
+  color: var(--mermaid-text) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+}
+
+.mermaid svg .actor-line,
+.mermaid svg line.actor-line,
+svg[id^="mermaid-"] .actor-line,
+svg[id^="mermaid-"] line.actor-line {
+  stroke: var(--mermaid-sequence-lifeline) !important;
+  stroke-width: 1.5px !important;
+  stroke-dasharray: none !important;
+}
+
+.mermaid svg .messageLine0,
+.mermaid svg .messageLine1,
+svg[id^="mermaid-"] .messageLine0,
+svg[id^="mermaid-"] .messageLine1 {
+  fill: none !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1.4px !important;
+}
+
+.mermaid svg marker path,
+.mermaid svg marker polygon,
+svg[id^="mermaid-"] marker path,
+svg[id^="mermaid-"] marker polygon {
+  fill: var(--mermaid-border) !important;
+  stroke: var(--mermaid-border) !important;
+  stroke-width: 1px !important;
+}
+
+.mermaid svg .messageText,
+.mermaid svg .loopText,
+.mermaid svg .labelText,
+.mermaid svg .noteText,
+.mermaid svg .sequenceNumber,
+svg[id^="mermaid-"] .messageText,
+svg[id^="mermaid-"] .loopText,
+svg[id^="mermaid-"] .labelText,
+svg[id^="mermaid-"] .noteText,
+svg[id^="mermaid-"] .sequenceNumber {
+  fill: var(--mermaid-muted-text) !important;
+  color: var(--mermaid-muted-text) !important;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+}
+
+.mermaid svg .note,
+.mermaid svg rect.note,
+svg[id^="mermaid-"] .note,
+svg[id^="mermaid-"] rect.note {
+  fill: var(--mermaid-sequence-note-bg) !important;
+  stroke: var(--mermaid-sequence-note-bg) !important;
+  stroke-width: 1px !important;
+  rx: 0 !important;
+  ry: 0 !important;
+}
+
+.mermaid svg .noteText,
+svg[id^="mermaid-"] .noteText {
+  fill: var(--mermaid-muted-text) !important;
+  color: var(--mermaid-muted-text) !important;
+}
+
+.mermaid svg .loopLine,
+svg[id^="mermaid-"] .loopLine {
+  fill: var(--mermaid-sequence-region-bg) !important;
+  stroke: var(--mermaid-sequence-region-border) !important;
+  stroke-width: 1.2px !important;
+  stroke-dasharray: 2 2 !important;
+}
+
+.mermaid svg .labelBox,
+svg[id^="mermaid-"] .labelBox {
+  fill: var(--mermaid-sequence-region-bg) !important;
+  stroke: var(--mermaid-sequence-region-border) !important;
+  stroke-width: 1.2px !important;
+}
+
+.mermaid svg .labelText,
+svg[id^="mermaid-"] .labelText {
+  fill: var(--mermaid-text) !important;
+  color: var(--mermaid-text) !important;
+  font-size: 14px !important;
 }

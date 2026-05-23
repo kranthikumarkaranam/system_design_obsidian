@@ -102,7 +102,8 @@ Read more in [Rendering on the web](https://web.dev/rendering-on-the-web/) and
 
 ## D — Data model
 
-> 💡 **Model for efficient rendering and frequent updates — not just mirroring raw API responses.** The feed is NOT a nested array of post objects. It is an ordered list of post IDs + pagination metadata.
+> 💡 **Model for efficient rendering and frequent updates — not just mirroring raw API responses.** 
+> The feed is NOT a nested array of post objects. It is an ordered list of post IDs + pagination metadata.
 
 ### Post entity
 
@@ -207,7 +208,7 @@ type Store = {
 };
 ```
 
-#### Normalized client store entity relationships (Mermaid )
+#### Normalized client store entity relationships (Mermaid Diagram)
 ```mermaid
 erDiagram
 
@@ -367,6 +368,8 @@ For simplicity, we'll assume attachments are directly uploaded to the app server
 - If using optimistic UI: insert temporary local post immediately → reconcile with canonical server `id` on success
 
 #### Post creation flow with media upload and optimistic UI (Mermaid Diagram)
+
+
 
 ```mermaid
 sequenceDiagram
@@ -592,7 +595,7 @@ Failure: revert to previous state, show error toast
 ```
 
 Works for: reactions, shares, post creation (insert temporary local post, then reconcile with server id).
-##### Reaction flow with optimistic update and rollback (mermaid diagram)
+##### Reaction flow with optimistic update and rollback (Mermaid Diagram)
 
 ```mermaid
 sequenceDiagram
@@ -685,13 +688,15 @@ _Source: ["Rebuilding our tech stack for the new Facebook.com" blog post](https
 
 #### Rich text for mentions/hashtags
 
-`<input>` and `<textarea>` only support plain text. `contenteditable` attribute enables a rich text editor.
+`<input>` and `<textarea>` only support plain text. `contenteditable` attribute enables a rich text editor. However, it is not a good idea to use `contenteditable="true"` as-is in production because it [comes with many issues](https://medium.engineering/why-contenteditable-is-terrible-122d8a40e480?gi=6b03d73f8e36). It'd be better to use battle-tested rich text editor libraries.
 
-> 💡 **`contenteditable` is a browser primitive, not a full editor.** Never use `contenteditable="true"` directly in production — too many edge cases. Use an editor framework.
+> ⭐ `contenteditable` **is a browser primitive, not a full editor**
+> It isn't a production editor architecture on its own. Use it underneath an editor framework or a carefully designed editing model rather than relying on the browser's default rich-text behavior directly.
 
 Editor libraries: **Lexical** (Meta, actively maintained), TipTap, Slate. Draft.js (Meta) is deprecated.
 
-> 💡 **Editor internal model need not match the wire format.** Composer uses a rich tree model internally for selection and undo. Serialize to compact entity-range format at the API boundary. Same model can then be used on web, iOS, Android.
+> ✅ **==The editor's internal model need not match the wire format==**
+> A composer can use a rich tree model for selection and undo, while the API and storage format benefits from being compact and easy to render. Serialize between the two at the boundary instead of forcing one shape to do both jobs. This also allows the same model to be rendered on platform-specific surfaces like web / iOS / Android.
 
 #### Composer XSS (paste and drop)
 
@@ -700,7 +705,9 @@ Composer is an XSS entry point:
 - Paste events can carry HTML from other apps
 - Drag-and-drop from browser tab can include script-bearing markup
 
-**Fix:** Intercept `paste` and `drop` events. Read `text/plain` from `DataTransfer`, discard `text/html` (or pass through DOMPurify with an explicit allowlist of tags).
+**Fix:** Intercept `paste` and `drop` events. Read `text/plain` from `DataTransfer`, discard `text/html` (or pass through [DOMPurify](https://github.com/cure53/DOMPurify) with an explicit allowlist of tags).
+
+_Source: [Facebook open sources rich text editor framework Draft.js](https://engineering.fb.com/2016/02/26/web/facebook-open-sources-rich-text-editor-framework-draft-js/)_
 
 #### Lazy load composer dependencies
 
@@ -734,7 +741,7 @@ Service Worker caches:
 
 User who opens app offline sees the last feed they scrolled, with posts clearly flagged as cached.
 
-TanStack Query persists its cache to IndexedDB — store survives tab reloads, feed renders from cache while background fetch revalidates.
+TanStack Query persists its cache to IndexedDB — client-side store survives tab reloads, feed renders from cache while background fetch revalidates.
 
 Extra UI: "connection lost" banner, disabled write controls, cached-post indicators.
 
@@ -752,15 +759,53 @@ Success → remove from outbox, replace optimistic id with server id
 Failure → retain entry in outbox, retry
 ```
 
-**Background Sync API** lets Service Worker flush the outbox after tab closes (Safari support is uneven — treat as best-effort, keep in-tab retry loop as correctness path).
+```mermaid
+sequenceDiagram
 
-> 💡 **Pair optimistic writes with an outbox and idempotency keys.** Without outbox, dropped connection loses the action when tab closes. Without idempotency keys, retry creates a duplicate post.
+participant U as User
+participant C as Client (store + view)
+participant O as Outbox (IndexedDB)
+participant S as Server
+
+U->>C: Submit post
+
+C->>O: Persist pending mutation<br/>(idempotency key)
+
+C->>C: Insert optimistic post at feed top
+
+C->>S: Send create-post mutation<br/>with idempotency key
+
+alt Online and success
+    S-->>C: post, users, media
+
+    C->>O: Remove from outbox
+
+    C->>C: Replace optimistic id with server id
+
+else Offline or transient failure
+    Note over C: Keep optimistic post with pending indicator
+
+    Note over O: Retain entry for retry
+end
+```
+
+The [Background Sync API](https://developer.mozilla.org/en-US/docs/Web/API/Background_Synchronization_API) lets the Service Worker flush the outbox after the tab has been closed, though browser support is uneven (Safari notably lacks it), so treat it as a best-effort optimization and keep an in-tab retry loop as the correctness path.
 
 #### Retry strategy
 
 - **Exponential backoff + jitter**: doubling delays with random offset — prevents thundering herd of clients reconnecting in lockstep after an outage
 - **Cap retry count**: permanent failures surface as errors instead of retrying forever
 - **Short-circuit on non-retryable codes**: `400`, `401`, `403`, `404`, `422` — won't succeed on retry, fail immediately
+> 400 Bad Request  
+> 401 Unauthorized  
+> 403 Forbidden  
+> 404 Not Found  
+> 422 Validation Error
+- Combine this with the request deduplication and idempotency keys from the API section, and the write path becomes safe under any mix of client retries, Service Worker retries, and network middlebox retries. The server always sees the same key and returns the same response.
+
+
+> ✅ **Pair optimistic writes with an outbox and idempotency keys.** 
+> Without the outbox, a dropped connection loses the user's action the moment the tab closes. Without idempotency keys, a retry from either the client or the Service Worker creates duplicate posts. Together, the outbox and idempotency keys make optimistic UI reliable even when requests are retried or the tab closes.
 
 ---
 
@@ -784,7 +829,8 @@ Same rules as posts apply:
 |**SSE**|Server → Client only|Simple, efficient, reconnects automatically via `Last-Event-ID`|
 |**WebSockets**|Bidirectional|✅ Default for FB-scale feed — one socket multiplexes comments + reactions + typing indicators|
 
-> 💡 **WebSockets as default for live updates; SSE as fallback** when only server-to-client push is needed or WebSocket upgrade is blocked by middleware.
+> ✅ **Default to WebSockets for live updates; use SSE where only push is needed** 
+> A feed needs bidirectional traffic for subscription management and acknowledgments. WebSockets carry that over one connection, while SSE needs separate client-to-server HTTP requests for subscriptions and acknowledgments. SSE earns its place as a fallback on networks where the WebSocket upgrade is blocked, or on simpler products where only server-to-client push is needed.
 
 Polling reserved for low-priority freshness checks (new-post banner) where lower operational cost justifies latency.
 
@@ -795,13 +841,16 @@ Production systems layer an application-specific protocol on WebSockets: subscri
 - Subscribe/unsubscribe based on post **visibility** (IntersectionObserver) — don't update off-screen posts
 - **Hot posts** (celebrities, politicians, breaking news): downgrade to count-only updates. Pushing every event is unreadable and wastes CPU + server fan-out. Debounce/throttle high-frequency update streams.
 
-> 💡 **Treat live comment updates as advanced follow-up depth.** Base answer can stop at paginated comment loading.
+> ✅ **Scope live updates to visible posts, and throttle hot posts**
+> For high-traffic posts (celebrities, politicians, breaking news), downgrade to count-only updates. Pushing every event for every loaded post wastes both client CPU and server fan-out, and individual comment-level updates become unreadable on hot posts anyway.
 
 ---
 
 ### O6 — Performance and metrics
 
 #### Core Web Vitals targets (p75)
+
+A long-lived, interaction-heavy feed should be measured by the [Core Web Vitals](https://web.dev/articles/vitals) the user actually experiences.
 
 |Metric|What it measures|Target|
 |---|---|---|

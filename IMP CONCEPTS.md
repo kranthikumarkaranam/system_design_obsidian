@@ -19,3 +19,4 @@
 		Marketplace cards  
 		Events
 - XSS prevention
+- request deduplication

@@ -2,13 +2,7 @@
 
 ## Agent Instruction File
 
-> **Purpose of this file:** When a new agent or new Claude session reads this file, it must be able to:
-> 
-> 1. Understand the full project context
-> 2. Recreate the exact folder and file structure
-> 3. Know the precise anatomy of every note type
-> 4. Know every linking rule, tag, and convention
-> 5. Generate new notes from raw source material (screenshots, PDFs, articles) in exactly the right format
+> **Read this entire file before doing anything.** Every section is mandatory. Do not skip sections. Do not guess conventions — every convention is explicitly defined here.
 
 ---
 
@@ -18,45 +12,55 @@
 
 **What:** An Obsidian knowledge vault for FE System Design interview prep.
 
-**Source material:** GreatFrontend (https://www.greatfrontend.com/front-end-system-design) — a structured FE SD study guide.
+**Source material:** GreatFrontend (https://www.greatfrontend.com/front-end-system-design) — structured FE SD study guide by Yangshun Tay (Sr. Meta Staff Engineer, formerly at Facebook/ByteDance).
 
-**Why Obsidian:** The graph view in Obsidian visualizes how concepts connect. Every `[[wikilink]]` between notes draws an edge in the graph. The goal is for the graph to become a visual map of the entire FE SD knowledge domain — where case studies cluster around core concept nodes, and everything routes back to the central MOC (Map of Content).
+**Why Obsidian:** The graph view visualizes how concepts connect. Every `[[wikilink]]` between notes draws an edge in the graph. The goal is for the graph to become a full visual map of the FE SD knowledge domain — case studies cluster around core concept nodes, and everything routes back to the central MOC.
 
-**Interview context:**
+**Interview framework used:** RADIO — Requirements, Architecture, Data model, Interface, Optimizations.
 
-- FE system design interviews are open-ended
-- Framework used: **RADIO** (Requirements, Architecture, Data model, Interface, Optimizations)
-- Two question types: **Applications** (e.g. News Feed, Google Docs) and **UI Components** (e.g. Modal, Dropdown)
-- Deep-dive topics that matter: Performance, Accessibility, Rendering, Caching, Networking, State
-- Source of truth for all content: GreatFrontend guide + author Yangshun Tay (Sr. Meta Staff Engineer)
+**Two question types:**
+- **Applications** — e.g. News Feed, Google Docs, Messenger
+- **UI Components** — e.g. Modal, Dropdown, Image Carousel
+
+**Deep-dive topics that matter:** Performance, Accessibility, Rendering, Caching, Networking, State Management, Internationalization, Component Architecture.
 
 ---
 
 ## 2. VAULT FOLDER STRUCTURE
 
 ```
-📁 FE Interview Prep/               ← Root vault folder (open this in Obsidian)
-  📁 00 - MOC/                      ← Central index — entry point to everything
-  📁 01 - Guidebook/                ← All GreatFrontend guidebook notes, in sidebar order
-  📁 02 - Core Concepts/            ← Technical concept notes (Rendering, Caching, A11y, etc.)
-  📁 03 - Case Studies/             ← One note per case study (Facebook Feed, Google Docs, etc.)
-  CLAUDE.md                         ← This file (keep at vault root)
+📁 system_design_obsidian/       ← Root (open this folder in Obsidian)
+  📁 00 - MOC/                   ← Central index — entry point to everything
+  📁 01 - Guidebook/             ← GreatFrontend guidebook notes, in sidebar order
+  📁 02 - Core Concepts/         ← Technical concept notes
+  📁 03 - Case Studies/          ← One note per case study, RADIO-structured
+  CLAUDE.md                      ← This file (always at vault root)
 ```
 
-### Guidebook sidebar order (GreatFrontend left-nav sequence — respect this order)
+### Folder rules
 
-The `01 - Guidebook/` folder mirrors the exact order of the GreatFrontend guidebook sidebar:
+- **Never create new folders.** The 4-folder structure is fixed.
+- **Never place files at vault root** except `CLAUDE.md`.
+- **Never nest subfolders** inside the 4 main folders.
 
-```
-1. Introduction
-2. Types of questions
-3. RADIO framework
-4. Evaluation axes
-5. Common mistakes
-6. Cheatsheet
-```
+---
 
-Obsidian sorts files alphabetically, so filenames are prefixed with the order number to enforce the correct sequence in the file explorer:
+## 3. FILE NAMING CONVENTIONS
+
+### Strict naming rules — no exceptions
+
+| Folder | Pattern | Example |
+|---|---|---|
+| `00 - MOC/` | `FE SD - MOC.md` | Fixed name, never changes |
+| `01 - Guidebook/` | `NN - FE SD - [Topic Name].md` | `03 - RADIO Framework.md` |
+| `01 - Guidebook/` (sub-note) | `[Topic Name].md` | `FE vs BE System Design.md` |
+| `02 - Core Concepts/` | `[Concept Name].md` | `Rendering Strategies.md` |
+| `03 - Case Studies/` | `Case Study - [System Name].md` | `Case Study - Facebook News Feed.md` |
+| `03 - Case Studies/` (template) | `_Case Study Template.md` | Underscore sorts it to top |
+
+### Guidebook prefix numbers
+
+Obsidian sorts files alphabetically. Prefix numbers enforce the GreatFrontend sidebar order:
 
 ```
 01 - FE SD - Introduction.md
@@ -65,84 +69,91 @@ Obsidian sorts files alphabetically, so filenames are prefixed with the order nu
 04 - FE SD - Evaluation Axes.md
 05 - FE SD - Common Mistakes.md
 06 - FE SD - Cheatsheet.md
-FE vs BE System Design.md          ← sub-note of Introduction, no prefix needed
+FE vs BE System Design.md          ← sub-note, no prefix
 ```
 
-### General naming rules
+### Naming rules
 
-- Folders: `NN - Name` (two-digit prefix + space + dash + space + name)
-- Guidebook files: `NN - FE SD - Topic Name.md` (order prefix + "FE SD -" prefix)
-- Case studies: always `Case Study - [System Name].md`
-- Case study template: `_Case Study Template.md` (underscore sorts it to top)
-- Concept notes: named exactly as they appear in wikilinks — `Accessibility (A11y).md`, `Networking and APIs.md`
+- Use title case for all file names
+- No special characters except hyphens `-` and parentheses `()`
+- Parentheses allowed for abbreviations: `Accessibility (A11y).md`, `Internationalization (i18n).md`
+- Never abbreviate in file names unless the abbreviation is the canonical term (A11y, i18n)
 
 ---
 
-## 3. COMPLETE FILE REGISTRY
+## 4. COMPLETE FILE REGISTRY
 
-Every file that exists or must exist. `[EXISTS]` = created and filled. `[STUB]` = linked but content not yet written. When the user provides source material for a stub, generate its full content.
+`[EXISTS]` = note has been written and filled.
+`[STUB]` = file must exist but content not yet written. When user provides source material for a stub, generate its full content using the correct template from Section 6.
 
 ### 00 - MOC/
 
-- [EXISTS] `FE SD - MOC.md` — central index hub
+| File | Status |
+|---|---|
+| `FE SD - MOC.md` | [EXISTS] |
 
 ### 01 - Guidebook/
 
-_(Files are prefixed with order numbers to match GreatFrontend sidebar sequence)_
-
-|#|Filename|Status|Content|
-|---|---|---|---|
-|1|`01 - FE SD - Introduction.md`|[EXISTS]|What FE SD interviews are, why they're hard, senior-level importance, guide overview|
-|2|`02 - FE SD - Types of Questions.md`|[EXISTS]|Applications table (16 types) + UI Components section|
-|3|`03 - RADIO Framework.md`|[EXISTS]|Full RADIO breakdown — all 5 steps, time allocation, examples|
-|4|`04 - FE SD - Evaluation Axes.md`|[EXISTS]|7 evaluation dimensions with what interviewers check|
-|5|`05 - FE SD - Common Mistakes.md`|[EXISTS]|7 mistakes in What/Why/Fix format|
-|6|`06 - FE SD - Cheatsheet.md`|[STUB]|Quick-reference cheatsheet for interview day|
-|—|`FE vs BE System Design.md`|[EXISTS]|Comparison table, FE focus areas, classic FB News Feed example|
+| # | File | Status |
+|---|---|---|
+| 1 | `01 - FE SD - Introduction.md` | [EXISTS] |
+| 2 | `02 - FE SD - Types of Questions.md` | [EXISTS] |
+| 3 | `03 - RADIO Framework.md` | [EXISTS] |
+| 4 | `04 - FE SD - Evaluation Axes.md` | [EXISTS] |
+| 5 | `05 - FE SD - Common Mistakes.md` | [EXISTS] |
+| 6 | `06 - FE SD - Cheatsheet.md` | [STUB] |
+| — | `FE vs BE System Design.md` | [EXISTS] |
 
 ### 02 - Core Concepts/
 
-- [EXISTS] `Rendering Strategies.md`
-- [EXISTS] `State Management.md`
-- [EXISTS] `Caching Strategies.md`
-- [EXISTS] `Performance Optimization.md`
-- [EXISTS] `Networking and APIs.md`
-- [EXISTS] `Accessibility (A11y).md`
-- [STUB] `Component Architecture.md`
-- [STUB] `Internationalization (i18n).md`
+| File | Status |
+|---|---|
+| `Rendering Strategies.md` | [EXISTS] |
+| `State Management.md` | [EXISTS] |
+| `Caching Strategies.md` | [EXISTS] |
+| `Performance Optimization.md` | [EXISTS] |
+| `Networking and APIs.md` | [EXISTS] |
+| `Accessibility (A11y).md` | [EXISTS] |
+| `Component Architecture.md` | [STUB] |
+| `Internationalization (i18n).md` | [STUB] |
 
 ### 03 - Case Studies/
 
-- [EXISTS] `_Case Study Template.md` — blank RADIO template; duplicate for each new case study
-- [EXISTS] `Case Study - Facebook News Feed.md`
-- [EXISTS] `Case Study - Autocomplete.md`
-- [STUB] `Case Study - Google Docs.md`
-- [STUB] `Case Study - Netflix Media Player.md`
-- [STUB] `Case Study - Instagram Media Upload.md`
-- [STUB] `Case Study - Messenger Real-time Chat.md`
-- [STUB] `Case Study - Airbnb SEO.md`
-- [STUB] `Case Study - Amazon E-commerce Performance.md`
-- [STUB] `Case Study - Lexical Rich Text Editor.md`
-- [STUB] `Case Study - Dropdown Menu Component.md`
-- [STUB] `Case Study - Image Carousel Component.md`
-- [STUB] `Case Study - Modal Dialog Component.md`
+| File | Status |
+|---|---|
+| `_Case Study Template.md` | [EXISTS] |
+| `Case Study - Facebook News Feed.md` | [EXISTS] |
+| `Case Study - Autocomplete.md` | [EXISTS] |
+| `Case Study - Google Docs.md` | [STUB] |
+| `Case Study - Netflix Media Player.md` | [STUB] |
+| `Case Study - Instagram Media Upload.md` | [STUB] |
+| `Case Study - Messenger Real-time Chat.md` | [STUB] |
+| `Case Study - Airbnb SEO.md` | [STUB] |
+| `Case Study - Amazon E-commerce Performance.md` | [STUB] |
+| `Case Study - Lexical Rich Text Editor.md` | [STUB] |
+| `Case Study - Dropdown Menu Component.md` | [STUB] |
+| `Case Study - Image Carousel Component.md` | [STUB] |
+| `Case Study - Modal Dialog Component.md` | [STUB] |
 
 ---
 
-## 4. TAG SYSTEM
+## 5. TAG SYSTEM
 
-Every note must have tags on line 2 (immediately after the H1 title, before any other content).
+Tags go on **line 2 of every note** — immediately after the H1 title, before any other content. No blank line between H1 and tags.
 
-|Tag|Used on|Meaning|
+### Tag definitions
+
+| Tag | Applied to | Meaning |
 |---|---|---|
-|`#concept`|Core concept notes|A standalone technical concept|
-|`#framework`|Framework notes|A process, mental model, or methodology|
-|`#case-study`|Case study notes|A real system to design end-to-end|
-|`#mistake`|Mistakes notes|Things to avoid in interviews|
-|`#to-revise`|Any note worth reviewing|Mark for pre-interview review sessions|
-|`#source/greatfrontend`|Notes from GreatFrontend|Tracks which notes came from this source|
+| `#moc` | MOC notes only | Central index hub |
+| `#guidebook` | All `01 - Guidebook/` notes | Source: GreatFrontend guidebook |
+| `#framework` | RADIO Framework note | A process or methodology |
+| `#concept` | All `02 - Core Concepts/` notes | Standalone technical concept |
+| `#case-study` | All `03 - Case Studies/` notes | A system to design end-to-end |
+| `#source/greatfrontend` | Any note from GreatFrontend | Tracks content origin |
+| `#to-revise` | Any note worth reviewing | Flag for pre-interview sessions |
 
-**Tag placement example:**
+### Tag placement — exact format
 
 ```markdown
 # Note Title
@@ -151,42 +162,43 @@ Every note must have tags on line 2 (immediately after the H1 title, before any 
 Back to: [[FE SD - MOC]]
 ```
 
-Tags go on ONE line, space-separated. No blank line between H1 and tags.
+### Rules
+
+- Tags on ONE line only, space-separated, no commas
+- No blank line between H1 and the tag line
+- Always include `#source/greatfrontend` for any note derived from GreatFrontend content
+- Always include `#to-revise` on every note that contains exam-relevant content
+- Never put tags anywhere else in the note
 
 ---
 
-## 5. WIKILINK CONVENTIONS
+## 6. WIKILINK CONVENTIONS
 
-Wikilinks are the core mechanic. Every link `[[Note Name]]` creates an edge in the graph.
+Wikilinks are the core mechanic. Every `[[Note Name]]` draws an edge in the Obsidian graph. Broken links (wrong name, wrong case) create orphaned nodes — this breaks the graph.
 
-### Rules for linking:
+### Canonical wikilink names
 
-1. **Always link back to MOC** — every note has `Back to: [[FE SD - MOC]]` near the top
-2. **Link "Introduced in"** — if a concept was first seen in a specific article, add `Introduced in: [[Note Name]]`
-3. **Link "Used in"** — concept notes list which case studies use them
-4. **Cross-link concepts** — every concept note links to related concepts where natural
-5. **Case studies link to ALL concepts they touch** — this is what makes the graph dense
-6. **Link inline in prose** — when mentioning a concept in text, link it: `[[Performance Optimization]]`
-
-### Exact wikilink names (must match filenames exactly, case-sensitive):
+These are the exact strings to use inside `[[...]]`. They must match filenames exactly, case-sensitive, without the `.md` extension.
 
 ```
 [[FE SD - MOC]]
 [[01 - FE SD - Introduction]]
+[[02 - FE SD - Types of Questions]]
+[[03 - RADIO Framework]]
+[[04 - FE SD - Evaluation Axes]]
+[[05 - FE SD - Common Mistakes]]
+[[06 - FE SD - Cheatsheet]]
 [[FE vs BE System Design]]
-[[RADIO Framework]]
-[[FE SD Question Types]]
-[[FE SD Evaluation Axes]]
-[[FE SD Common Mistakes]]
 [[Rendering Strategies]]
 [[State Management]]
 [[Caching Strategies]]
 [[Performance Optimization]]
-[[Networking & APIs]]           ← NOTE: uses & not "and" in wikilinks
+[[Networking and APIs]]
 [[Accessibility (A11y)]]
-[[Internationalization (i18n)]]
 [[Component Architecture]]
+[[Internationalization (i18n)]]
 [[Case Study - Facebook News Feed]]
+[[Case Study - Autocomplete]]
 [[Case Study - Google Docs]]
 [[Case Study - Netflix Media Player]]
 [[Case Study - Instagram Media Upload]]
@@ -199,269 +211,656 @@ Wikilinks are the core mechanic. Every link `[[Note Name]]` creates an edge in t
 [[Case Study - Modal Dialog Component]]
 ```
 
-⚠️ IMPORTANT: The file `Networking and APIs.md` uses "and" but the wikilink is `[[Networking & APIs]]` — Obsidian resolves these differently. The file should be renamed to `Networking & APIs.md` to match the wikilink. If regenerating, use `Networking & APIs.md` as the filename.
+### Mandatory linking rules
+
+1. **Every note must link back to MOC** — place `Back to: [[FE SD - MOC]]` on the line directly after the tag line.
+2. **Concept notes must list case studies** — every concept note has a "Used in these case studies" section linking every case study that uses it.
+3. **Case studies must link all concepts** — every case study ends with a "Concepts used in this case study" section listing every concept it touches.
+4. **Link inline in prose** — when a concept is mentioned naturally in text, make it a wikilink: `[[Performance Optimization]]`.
+5. **Link on first mention** — link a concept the first time it appears in a note. Do not link the same concept more than once per note.
+6. **Never use display aliases** — `[[Performance Optimization]]` not `[[Performance Optimization|perf]]`.
 
 ---
 
-## 6. NOTE ANATOMY — EXACT TEMPLATES
+## 7. FORMATTING RULES
 
-### 6.1 MOC Note (00 - MOC/)
+These rules apply to every note in every folder without exception.
+
+### Structure
+
+- **H1** (`#`) — note title only. Exactly one per note. Always at the very top.
+- **H2** (`##`) — major sections only.
+- **H3** (`###`) — subsections within an H2.
+- **H4 and below** — never use.
+- **Horizontal rules** (`---`) — separate every major section.
+
+### Text formatting
+
+- **Bold** (`**text**`) — key terms and things to memorize. Never for decoration.
+- *Italic* — sparingly, for emphasis or new term introduction only.
+- `Inline code` — for: file names, property names, CSS class names, method names, short values.
+- Never underline.
+
+### Callouts
+
+Use `> 💡` for key insights, things to memorize, and interview tips. Never use Obsidian's native callout syntax (`> [!note]`).
 
 ```markdown
-# [Title] — Map of Content
+> 💡 RADIO is a checklist, not a rigid sequence. Backtrack freely between steps.
+```
 
-> [One-line description of what this MOC covers]
+### Code blocks
 
-## 🗺️ How this vault works
-- [Usage tip 1]
-- [Usage tip 2]
+Always specify the language. Use these language identifiers:
+
+| Content | Identifier |
+|---|---|
+| TypeScript types/interfaces | ` ```typescript ` |
+| JavaScript | ` ```javascript ` |
+| HTTP endpoints | ` ```http ` |
+| Bash / terminal | ` ```bash ` |
+| Plain text / ASCII diagrams | ` ```text ` |
+
+### Tables
+
+- Use for comparisons, decision guides, and structured data.
+- Never use tables for content that reads naturally as prose or bullet points.
+- Always include a header row.
+
+### Lists
+
+- Use bullet points for unordered collections with no meaningful sequence.
+- Use numbered lists only when order or sequence matters.
+- Maximum 2 levels of nesting. Never nest deeper.
+- Never use bullet points where prose flows naturally.
+
+### Emoji
+
+- Allowed only in MOC section headers: 📌 📚 🔧 🏗️ 🏷️
+- Allowed inside `> 💡` callouts only.
+- Never use emoji anywhere else in any note.
+
+### Line spacing
+
+- One blank line between paragraphs.
+- No blank line between H1 and the tag line.
+- One blank line between the tag/backlink block and the first `---`.
+
+---
+
+## 8. NOTE TEMPLATES — EXACT ANATOMY
+
+This is the most critical section. Every note type has a mandatory structure. Deviating from these templates will break graph consistency and interview usability.
+
+---
+
+### 8.1 MOC Note
+
+**File:** `00 - MOC/FE SD - MOC.md`
+**Tags:** `#moc`
+
+```markdown
+# FE SD — Map of Content
+
+#moc
+> Central hub for the FE System Design interview prep vault. Start here.
 
 ---
 
 ## 📌 Start Here
-- [[Note]] — [one-line description]
+
+- [[01 - FE SD - Introduction]] — What FE SD interviews are and why they're hard
+- [[FE vs BE System Design]] — Key differences between FE and BE system design
+- [[03 - RADIO Framework]] — The 5-step framework used in every answer
 
 ---
 
-## 📚 Core Topics
-- [[Note]] — [one-line description]
+## 📚 Guidebook
+
+- [[01 - FE SD - Introduction]] — Overview and guide structure
+- [[02 - FE SD - Types of Questions]] — Applications vs UI Components, 16 question types
+- [[03 - RADIO Framework]] — Requirements, Architecture, Data model, Interface, Optimizations
+- [[04 - FE SD - Evaluation Axes]] — 7 axes interviewers score you on
+- [[05 - FE SD - Common Mistakes]] — 7 mistakes that cost candidates the role
+- [[06 - FE SD - Cheatsheet]] — Interview-day quick reference
 
 ---
 
 ## 🔧 Core Concepts
-*(fill these in as you study each topic)*
-- [[Concept Note]] — [one-line description]
+
+- [[Rendering Strategies]] — CSR, SSR, SSG, ISR — when to use each
+- [[State Management]] — Server state vs client state, state shape design
+- [[Caching Strategies]] — CDN, HTTP cache, Service Worker, in-memory, IndexedDB
+- [[Performance Optimization]] — Core Web Vitals, loading, runtime, network
+- [[Networking and APIs]] — Protocols, REST design, WebSockets, SSE, optimistic updates
+- [[Accessibility (A11y)]] — POUR, ARIA, keyboard navigation, focus management
+- [[Component Architecture]] — Component hierarchy, composition, separation of concerns
+- [[Internationalization (i18n)]] — i18n patterns, RTL, locale, formatting
 
 ---
 
 ## 🏗️ Case Studies
-*(each case study links back to the concepts it uses)*
-- [[Case Study - X]]
+
+- [[Case Study - Facebook News Feed]]
+- [[Case Study - Autocomplete]]
+- [[Case Study - Google Docs]]
+- [[Case Study - Netflix Media Player]]
+- [[Case Study - Instagram Media Upload]]
+- [[Case Study - Messenger Real-time Chat]]
+- [[Case Study - Airbnb SEO]]
+- [[Case Study - Amazon E-commerce Performance]]
+- [[Case Study - Lexical Rich Text Editor]]
+- [[Case Study - Dropdown Menu Component]]
+- [[Case Study - Image Carousel Component]]
+- [[Case Study - Modal Dialog Component]]
 
 ---
 
 ## 🏷️ Tags used in this vault
+
 | Tag | Meaning |
-|-----|---------|
-| `#tag` | meaning |
+|---|---|
+| `#moc` | Central index hub |
+| `#guidebook` | GreatFrontend guidebook note |
+| `#framework` | A process or methodology |
+| `#concept` | Standalone technical concept |
+| `#case-study` | A system to design end-to-end |
+| `#source/greatfrontend` | Content sourced from GreatFrontend |
+| `#to-revise` | Flag for pre-interview review |
 ```
 
-### 6.2 Intro / Article Note (01 - Intro/)
+---
+
+### 8.2 Guidebook Note (01 - Guidebook/)
+
+**Tags:** `#guidebook #source/greatfrontend #to-revise`
+
+The RADIO Framework note also gets `#framework`.
 
 ```markdown
-# [Article Title]
+# [Article Title — matches GreatFrontend page heading exactly]
 
-#source/greatfrontend #to-revise
-Source: [URL]
-Author: [Author name and role]
-
+#guidebook #source/greatfrontend #to-revise
 Back to: [[FE SD - MOC]]
+Source: [Full URL of the GreatFrontend page]
+Author: Yangshun Tay — Sr. Staff Engineer, Meta
 
 ---
 
-## [Section heading from article]
+## [Section heading — paraphrase from article, do not copy verbatim]
 
-[Content as bullet points or prose — paraphrase, never copy verbatim]
+[Content as prose or structured bullet points. Paraphrase all content — never copy verbatim from source.]
 
-> 💡 [Key insight as a callout]
+> 💡 [Key insight or interview tip as a callout]
 
 ---
 
-## [Another section]
+## [Next section heading]
 
-[Content with inline wikilinks to concepts where natural]
+[Content with inline wikilinks wherever a concept is named naturally.]
 
 See: [[Related Note]]
+
+---
+
+## Summary
+
+[2–4 sentence summary of the key takeaway from this note. Written as prose.]
 ```
 
-### Correct 4-layer client architecture (from article — do NOT use old 5-layer version)
+**Rules specific to Guidebook notes:**
+- The H1 title must match the GreatFrontend page heading as closely as possible.
+- Always include the source URL and author attribution.
+- Every concept mentioned by name must be wikilinked on its first appearance.
+- End every Guidebook note with a "Summary" section.
 
-|Layer|What it contains|
-|---|---|
-|**Server**|Black box — HTTP/GraphQL/WebSocket APIs|
-|**View layer**|Components/pages — presentation + local state ONLY|
-|**Store / Model layer**|Cross-cutting data — Redux Toolkit, Zustand, Jotai, MobX|
-|**Data access layer**|Fetching, caching, errors — React Query, tRPC, Apollo Client|
+---
 
-⚠️ Do NOT use: "Controller/Logic layer", "Service/Network layer", "Cache layer" — these are NOT in the source.
+### 8.3 RADIO Framework Note
 
-### 6.3 Framework Note (02 - Framework/)
+**File:** `01 - Guidebook/03 - RADIO Framework.md`
+**Tags:** `#guidebook #framework #source/greatfrontend #to-revise`
+
+This note gets its own stricter template because it is the most referenced note in the entire vault.
 
 ```markdown
-# [Framework Name]
+# RADIO Framework
 
-#framework #source/greatfrontend #to-revise
+#guidebook #framework #source/greatfrontend #to-revise
 Back to: [[FE SD - MOC]]
-Source: [Source description]
+Source: https://www.greatfrontend.com/front-end-system-design
+Author: Yangshun Tay — Sr. Staff Engineer, Meta
+
+> 💡 RADIO is a checklist, not a rigid linear sequence. Move between steps freely. Write "RADIO" on the whiteboard and check off each letter as you cover it.
 
 ---
 
-## What is [Framework]?
+## Overview
 
-[Brief explanation — what problem it solves, when to use it]
+| Step | Full Name | Time allocation |
+|---|---|---|
+| R | Requirements | ~10% |
+| A | Architecture | ~20% |
+| D | Data Model | ~10% |
+| I | Interface | ~40% |
+| O | Optimizations | ~20% |
 
+---
+
+## R — Requirements
+
+**Goal:** Clarify what to build before touching architecture.
+
+**Two types:**
+
+- **Functional requirements** — what the system must do (features)
+- **Non-functional requirements** — how well it must do it (performance, a11y, SEO, offline, i18n)
+
+**Approach:** Take initiative. List requirements yourself, then get alignment. Do not wait to be fed requirements.
+
+**Core questions to ask:**
+- Which features to focus on?
+- What is core vs good-to-have?
+- What devices/browsers must be supported?
+- Offline support required?
+- Performance targets?
+- SEO required?
+- Accessibility standard (WCAG 2.1 AA)?
+
+**Output:** Write agreed requirements on the whiteboard before moving on.
+
+---
+
+## A — Architecture
+
+**Goal:** Identify the major components and how they connect.
+
+**The 4-layer client architecture (always use this — do not invent other layers):**
+
+| Layer | What it contains | Example tools |
+|---|---|---|
+| **Server** | Black box — APIs only. HTTP/GraphQL/WebSocket. | REST, GraphQL, WebSocket |
+| **View layer** | Components and pages. Presentation + local state only. | React, Vue |
+| **Store / Model layer** | Cross-cutting shared data. Unidirectional data flow. | Redux Toolkit, Zustand, Jotai, MobX |
+| **Data access layer** | Fetching, caching, error management. The only layer that touches offline storage. | React Query, tRPC, Apollo Client |
+
+> 💡 Not every product needs all 4 layers. A simple UI Component may only need the View layer and no store at all.
+
+**Separation of concerns:**
+- View layer handles presentation and local component state only.
+- Never put network calls directly inside components — that belongs in the Data access layer.
+- Never put UI logic inside the Store layer — that belongs in the View layer.
+
+**After drawing the architecture diagram:**
+- Verbally describe what each box is responsible for.
+- Identify where computation happens: client vs server trade-off.
+
+**Tools for drawing:** Excalidraw, diagrams.net.
+
+---
+
+## D — Data Model
+
+**Goal:** Define the shape of the data flowing through the system.
+
+**Two categories of data:**
+
+| Category | Description | Examples |
+|---|---|---|
+| **Server-originated** | Comes from the API. Persisted on the server. | User profile, posts, messages |
+| **Client-only** | Lives only in the browser. Two subtypes: | |
+| — Persisted | Will be sent to server eventually | Draft message, form input |
+| — Ephemeral | OK to lose on tab close | UI state, modal open/closed |
+
+**Output format:**
+- Use TypeScript interfaces for all data types.
+- Always separate server types from client UI state types.
+- List each field with a comment explaining its purpose.
+- Iterate — add fields as requirements evolve during the session.
+
+```typescript
+// Server data (from API)
+type Post = {
+  id: string;           // unique post identifier
+  authorId: string;     // references User.id
+  content: string;      // post body text
+  createdAt: number;    // unix timestamp
+  likeCount: number;    // denormalized for display speed
+};
+
+// Client UI state
+type FeedState = {
+  posts: Post[];         // ordered list from API
+  cursor: string | null; // pagination cursor
+  isLoading: boolean;    // loading indicator
+  error: string | null;  // error message if fetch failed
+};
 ```
 
-[Acronym breakdown as code block if applicable]
+---
 
+## I — Interface
+
+**Goal:** Define exactly how every component communicates with everything else.
+
+**Three interface types:**
+
+### Server ↔ Client (API protocols)
+
+| Protocol | When to use |
+|---|---|
+| HTTP/REST | Default for most reads and writes |
+| WebSockets | Bidirectional real-time (chat, live collaboration) |
+| SSE (Server-Sent Events) | Server → client only, one-directional streaming |
+| Long polling | Fallback when WebSockets unavailable |
+| GraphQL | Flexible queries, unlikely needed in interviews |
+| WebRTC | P2P media (video calls), very specific use case |
+
+**REST endpoint format:**
+
+```http
+GET /api/v1/feed?userId={userId}&cursor={cursor}&limit=10
+→ {
+    posts: Post[],
+    nextCursor: string | null,
+    hasMore: boolean
+  }
 ```
 
-> 💡 [Core insight as callout]
+### Client ↔ Client (component communication)
+
+| Pattern | When to use |
+|---|---|
+| Props + callbacks | Parent-child, foundational default |
+| Store dispatch | Cross-component, global shared state |
+| Pub/sub event listeners | Decoupled components, most common in browser APIs |
+
+### UI Component props API
+
+Only define this if the question is specifically about a UI Component (not an application).
+
+```typescript
+type DropdownProps = {
+  // Data props
+  options: Option[];               // list of selectable items
+  value: string | null;            // currently selected value
+
+  // Event/Callback props
+  onChange: (value: string) => void;   // fires on selection
+  onClose?: () => void;                // fires on dismiss
+
+  // Configuration/Behavior props
+  disabled?: boolean;              // disable interaction
+  multiSelect?: boolean;           // allow multiple selections
+
+  // Styling/Presentation props
+  placeholder?: string;            // text shown when nothing selected
+  className?: string;              // consumer-provided class override
+
+  // Render/Slot props
+  renderOption?: (option: Option) => React.ReactNode;  // custom option renderer
+};
+```
 
 ---
 
-## [Each step/component as its own H2]
+## O — Optimizations
 
-**Goal:** [What this step achieves]
+**Goal:** Demonstrate depth in areas most relevant to this specific product.
 
-[Content with bullet points, tables, and code examples]
+**Guiding principle:** Do not give generic advice. Every optimization must be justified by the specific product being designed.
+
+**Available optimization areas:**
+
+| Area | Focus on when |
+|---|---|
+| [[Performance Optimization]] | Feeds, e-commerce, media-heavy apps |
+| [[Networking and APIs]] | Real-time apps, large data transfers |
+| UX | Any consumer-facing product |
+| [[Accessibility (A11y)]] | Any public-facing product — always mention |
+| SEO | Public pages, marketing sites, e-commerce |
+| [[Internationalization (i18n)]] | Global products |
+| Multi-device | Mobile web, cross-platform |
+| Security | Auth flows, user data, payment |
+
+**What to always avoid discussing in O:**
+- JS framework debates (React vs Vue vs Angular)
+- CSS framework choices (Tailwind vs CSS Modules)
+- Generic performance advice not tied to the product
+- Logging, analytics, monitoring setup
+- DevOps, CI/CD, build tooling
+- Infrastructure (servers, load balancers, databases) — that is BE SD
+
+> 💡 Exception: mention frameworks only when the choice changes architectural trade-offs — e.g. Next.js when SSR/SSG strategy is a core part of the answer.
 
 ---
 
-## Summary table
-
-| Column | Column |
-|--------|--------|
-| row | row |
-
----
-
-## [Framework] applied to [Example] (quick reference)
+## RADIO Applied to Facebook News Feed
 
 | Step | Answer |
-|------|--------|
-| [Step] | [Answer] |
+|---|---|
+| Requirements | Infinite scroll feed, like/comment, real-time updates, mobile web |
+| Architecture | Data access layer (React Query) → Store (feed slice) → Feed UI (FeedList, PostCard) |
+| Data Model | `Post`, `User`, `FeedState` TypeScript types |
+| Interface | `GET /api/v1/feed?cursor=` with cursor pagination |
+| Optimizations | List virtualization, image lazy loading, optimistic like updates |
 
-See: [[Related Case Study]]
+See: [[Case Study - Facebook News Feed]]
+
+---
+
+## Summary
+
+RADIO gives structure to an open-ended interview. Use it as a checklist to ensure coverage, not as a rigid script. The Interface step (I) deserves the most time — this is where technical depth shows. Always tailor the Optimizations step to the specific product being designed.
 ```
 
-### 6.4 Concept Note (06 - Core Concepts/)
+---
 
-````markdown
+### 8.4 Concept Note (02 - Core Concepts/)
+
+**Tags:** `#concept #source/greatfrontend #to-revise`
+
+```markdown
 # [Concept Name]
 
-#concept #to-revise
+#concept #source/greatfrontend #to-revise
 Back to: [[FE SD - MOC]]
-Used in: [[RADIO Framework]] → [which step]
+Used in: [[03 - RADIO Framework]] → [which RADIO step this concept appears in]
 
 ---
 
-## [Core explanation section]
+## What is [Concept Name]?
 
-[Explanation with tables, comparisons, code snippets]
-
----
-
-## [Technique / Pattern section]
-
-[Content — be specific, include code examples for technical concepts]
-
-```[language]
-// Code example with comments
-````
+[2–4 sentence definition. What problem does this concept solve? When does it become relevant in a system design interview?]
 
 ---
 
-## [Decision guide / when to use]
+## [Core section — named for the main content, e.g. "Strategies", "Patterns", "Techniques"]
 
-[Decision tree or table showing when to apply this concept]
+[Main technical content. Use tables for comparisons. Use code blocks for code. Use callouts for things to memorize.]
+
+> 💡 [Key insight]
+
+---
+
+## [Second major section — e.g. "When to Use", "Decision Guide", "Trade-offs"]
+
+[Decision table or if/then guide for choosing between options.]
+
+| Option | Use when | Avoid when |
+|---|---|---|
+| [Option A] | [condition] | [condition] |
+| [Option B] | [condition] | [condition] |
+
+---
+
+## [Third major section if needed — e.g. "Implementation Notes", "Code Example"]
+
+```typescript
+// Code with comments explaining every non-obvious line
+```
 
 ---
 
 ## Used in these case studies
 
-[This section is critical — it connects concepts to case studies in the graph]
+[This section is mandatory. It creates bidirectional edges in the graph.]
 
-- [[Case Study - X]] — [why it's relevant]
-- [[Case Study - Y]] — [why it's relevant]
+- [[Case Study - X]] — [one sentence on how this concept applies to that case study]
+- [[Case Study - Y]] — [one sentence on how this concept applies to that case study]
+```
 
-````
+**Rules specific to Concept notes:**
+- The "Used in these case studies" section is mandatory. If no case studies exist yet, write `(None yet — add as case studies are created)`.
+- The "Used in:" line after Back to MOC must specify which RADIO step (R, A, D, I, or O) this concept most often appears in.
+- Every concept note must have at least one code example if the concept has any technical implementation detail.
 
-### 6.5 Case Study Note (05 - Case Studies/)
+---
+
+### 8.5 Case Study Note (03 - Case Studies/)
+
+**Tags:** `#case-study #source/greatfrontend #to-revise`
 
 ```markdown
 # Case Study - [System Name]
 
-#case-study #to-revise
+#case-study #source/greatfrontend #to-revise
 Back to: [[FE SD - MOC]]
-Question type: [[FE SD Question Types]] → [Application / UI Component]
+Question type: [[02 - FE SD - Types of Questions]] → [Application / UI Component]
+Framework: [[03 - RADIO Framework]]
 
 ---
 
 ## Requirements (R)
 
-### Functional
-- [Feature 1]
-- [Feature 2]
+### Functional requirements
 
-### Non-functional
-- [Performance requirement]
-- [Accessibility requirement]
-- [Scale/device target]
+- [Specific feature 1 — written as a user-facing capability]
+- [Specific feature 2]
+- [Specific feature 3]
 
-### Out of scope (for this session)
-- [What we're NOT designing]
+### Non-functional requirements
+
+- [Performance requirement — e.g. "Feed loads within 2s on mobile 4G"]
+- [Accessibility — e.g. "WCAG 2.1 AA compliant"]
+- [Device/browser target — e.g. "Mobile and desktop web, Chrome/Safari/Firefox"]
+- [Scale target if relevant — e.g. "Millions of concurrent users"]
+
+### Out of scope
+
+- [Thing 1 not being designed in this session]
+- [Thing 2 not being designed in this session]
 
 ---
 
 ## Architecture (A)
 
+**Question type:** [Application / UI Component]
+
 **Major components:**
-- [Component 1] — [what it does]
-- [Component 2] — [what it does]
+
+| Component | Responsibility |
+|---|---|
+| [Component 1] | [What it renders or manages] |
+| [Component 2] | [What it renders or manages] |
+
+**4-layer breakdown:**
+
+| Layer | What lives here for this product |
+|---|---|
+| Server | [API endpoints used — e.g. REST feed API, WebSocket for notifications] |
+| View layer | [Main components — e.g. FeedList, PostCard, LikeButton] |
+| Store / Model layer | [Global state — e.g. feedSlice (posts, cursor), userSlice (currentUser)] |
+| Data access layer | [Fetching strategy — e.g. React Query for feed, SWR for user profile] |
 
 **Data flow:**
-[Description of how data moves through the system]
 
-**Architecture diagram (text):**
-````
+[1–3 sentences describing how data moves from server to screen. Be specific — name the actual components and layers.]
 
-[ASCII or text representation of component hierarchy]
+**Architecture diagram:**
 
-````
+```text
+[Server API]
+     ↓ HTTP / WebSocket
+[Data Access Layer]  ← React Query / tRPC
+     ↓
+[Store / Model Layer] ← Redux / Zustand
+     ↓
+[View Layer]
+  ├── [ParentComponent]
+  │     ├── [ChildComponent A]
+  │     └── [ChildComponent B]
+  └── [SiblingComponent]
+```
 
 ---
 
 ## Data Model (D)
 
 ```typescript
-// Server data (from API)
-type [Entity] = {
-  [field]: [type]   // comment
-}
+// ── Server data (from API) ──────────────────────────────────────
 
-// Client UI state
+type [Entity1] = {
+  id: string;          // [description]
+  [field]: [type];     // [description]
+};
+
+type [Entity2] = {
+  id: string;          // [description]
+  [field]: [type];     // [description]
+};
+
+// ── Client UI state ─────────────────────────────────────────────
+
 type [State] = {
-  [field]: [type]   // comment
-}
-````
+  [field]: [type];     // [description — note if ephemeral or persisted]
+};
+```
 
-**Server state:** [what comes from API] **Client state:** [what is UI-only]
+**Server state:** [List the server-originated entities and where they come from]
+
+**Client state:** [List the UI-only state and which component owns it]
 
 ---
 
-## Interface / API (I)
+## Interface (I)
 
-**Server API:**
+### Server API
 
-```
-[HTTP METHOD] /api/[endpoint]?[params]
-  → { [response shape] }
-```
-
-**WebSocket events (if real-time):**
-
-```
-Client → Server: { type: '[event]', payload: {...} }
-Server → Client: { type: '[event]', payload: {...} }
+```http
+[METHOD] /api/v1/[resource]?[params]
+Request:  { [request body shape if POST/PUT] }
+Response: { [response shape with field names and types] }
 ```
 
-**Component API (if UI component):**
+[Add more endpoints if the system needs them. One code block per endpoint.]
+
+### WebSocket events (only include if the product is real-time)
+
+```text
+Client → Server: { type: "[event-name]", payload: { [fields] } }
+Server → Client: { type: "[event-name]", payload: { [fields] } }
+```
+
+### Component props API (only include if question type is UI Component)
 
 ```typescript
-type [Component]Props = {
-  [prop]: [type]   // [description]
-}
+type [ComponentName]Props = {
+  // Data props
+  [prop]: [type];      // [description]
+
+  // Event/Callback props
+  [onEvent]: ([args]) => void;  // [when it fires]
+
+  // Configuration/Behavior props
+  [prop]?: [type];     // [description, default value]
+
+  // Styling/Presentation props
+  className?: string;  // consumer-provided class override
+
+  // Render/Slot props
+  [renderProp]?: ([args]) => React.ReactNode;  // [description]
+};
 ```
 
 ---
@@ -470,314 +869,266 @@ type [Component]Props = {
 
 ### Performance
 
-- [Specific optimization] — [why it matters here]
-- Links: [[Performance Optimization]]
+- [Specific optimization technique] — [why it matters for this specific product]
+- [Another optimization] — [why it matters]
+
+Links: [[Performance Optimization]]
 
 ### Accessibility
 
-- [Specific a11y consideration]
-- Links: [[Accessibility (A11y)]]
+- [Specific a11y consideration for this product]
+- [Keyboard interaction that must be handled]
+- [ARIA role or attribute required]
 
-### [Other relevant area]
+Links: [[Accessibility (A11y)]]
 
-- [Content]
+### [Third area — choose the most relevant for this product: Networking, Caching, SEO, i18n, Security]
+
+- [Specific consideration]
+
+Links: [[Relevant Concept Note]]
 
 ---
 
 ## Concepts used in this case study
 
-[CRITICAL: link every concept this system uses — this builds the graph]
+[Mandatory. Every concept this case study touches must be linked here. This section builds bidirectional graph edges.]
 
-- [[Rendering Strategies]] — [how it's used here]
-- [[State Management]] — [how it's used here]
-- [[Networking & APIs]] — [how it's used here]
-- [[Performance Optimization]] — [how it's used here]
-- [[Caching Strategies]] — [how it's used here]
-- [[Accessibility (A11y)]] — [how it's used here]
+- [[Rendering Strategies]] — [one sentence on how it applies here]
+- [[State Management]] — [one sentence on how it applies here]
+- [[Networking and APIs]] — [one sentence on how it applies here]
+- [[Performance Optimization]] — [one sentence on how it applies here]
+- [[Caching Strategies]] — [one sentence on how it applies here]
+- [[Accessibility (A11y)]] — [one sentence on how it applies here]
+```
 
-````
+**Rules specific to Case Study notes:**
+- TypeScript types in the Data Model section are mandatory. Never write this section in prose only.
+- At least one real API endpoint example is mandatory in the Interface section.
+- The "Concepts used in this case study" section is mandatory, even if some links are stubs.
+- The architecture diagram (text/ASCII) is mandatory. Do not skip it.
+- Do not include the WebSocket events block unless the product actually requires real-time communication.
+- Do not include the Component props API block unless the question type is explicitly "UI Component".
 
-### 6.6 Evaluation / Mistakes Notes (04 - Eval & Mistakes/)
+---
 
-For **Common Mistakes**, each mistake uses this sub-structure:
-```markdown
-## ❌ Mistake N — [Mistake name]
+### 8.6 Case Study Template Note
 
-**What happens:** [Behavior description]
+**File:** `03 - Case Studies/_Case Study Template.md`
 
-**Why it hurts:** [Impact on interview score]
+This is a blank version of the Case Study template (Section 8.5) with all placeholder text intact but no content filled in. It exists so the user can duplicate it for each new case study. Generate it exactly as the template in 8.5 but with every `[bracketed placeholder]` left as-is and no real content filled in.
 
-**Fix:** [Concrete actionable correction] See [[Related Note]].
-````
+---
 
-For **Evaluation Axes**, each axis uses:
+### 8.7 Evaluation Axes Note
+
+**File:** `01 - Guidebook/04 - FE SD - Evaluation Axes.md`
+**Tags:** `#guidebook #source/greatfrontend #to-revise`
+
+Each axis uses this sub-structure:
 
 ```markdown
 ## N. [Axis Name]
 
-- [What is evaluated — question 1]
-- [What is evaluated — question 2]
+**What interviewers check:**
+- [Specific observable behavior 1]
+- [Specific observable behavior 2]
 
-Links: [[Related Note]] → [specific part]
+**Links:** [[Related Concept Note]] → [which part of the concept is relevant]
 ```
 
 ---
 
-## 7. FORMATTING RULES
+### 8.8 Common Mistakes Note
 
-These rules apply to ALL notes:
+**File:** `01 - Guidebook/05 - FE SD - Common Mistakes.md`
+**Tags:** `#guidebook #source/greatfrontend #to-revise`
 
-1. **H1 = note title** — exactly one H1 per note, at the very top
-2. **H2 = major sections** — use for top-level sections
-3. **H3 = subsections** — use within a section
-4. **Horizontal rules `---`** separate major sections
-5. **Callouts** use `> 💡 [text]` format (not Obsidian callout syntax)
-6. **Tables** are used for comparisons, not for lists that could be prose
-7. **Code blocks** for: TypeScript interfaces, API endpoints, HTTP headers, code patterns
-    - Always specify language: ` ```typescript `, ` ```javascript `, ` ```http `, ` ```bash `
-8. **Bold** `**text**` for emphasis on key terms, never for decoration
-9. **Never use bullet points for everything** — use prose where ideas connect
-10. **Emoji** only in MOC headers (📌 📚 🔧 🏗️ 🏷️) — not in other notes
-11. **`> 💡`** callouts for: key insights, things to memorize, interview tips
-12. **No nested bullet points deeper than 2 levels**
+Each mistake uses this sub-structure:
 
----
+```markdown
+## ❌ Mistake [N] — [Mistake name]
 
-## 8. HOW TO GENERATE NOTES FROM SOURCE MATERIAL
+**What happens:** [Behavioral description — what the candidate does]
 
-When the user provides a new article, screenshot, or PDF from GreatFrontend:
+**Why it hurts:** [Specific impact on interview score]
 
-### Step 1 — Identify what type of content it is
+**Fix:** [Concrete, actionable correction — written as an instruction to the candidate]
 
-|Source content|Note type|Folder|Naming|
-|---|---|---|---|
-|Introduction / overview article|Intro note (6.2)|`01 - Guidebook/`|`01 - FE SD - Introduction.md`|
-|Types of questions article|Question types note|`01 - Guidebook/`|`02 - FE SD - Types of Questions.md`|
-|Framework explanation|Framework note (6.3)|`01 - Guidebook/`|`03 - RADIO Framework.md`|
-|Evaluation / scoring criteria|Eval axes note|`01 - Guidebook/`|`04 - FE SD - Evaluation Axes.md`|
-|Common mistakes|Mistakes note|`01 - Guidebook/`|`05 - FE SD - Common Mistakes.md`|
-|Cheatsheet|Cheatsheet note|`01 - Guidebook/`|`06 - FE SD - Cheatsheet.md`|
-|A specific system to design|Case study note (6.5)|`03 - Case Studies/`|`Case Study - [Name].md`|
-|A technical concept|Concept note (6.4)|`02 - Core Concepts/`|`[Concept Name].md`|
-
-### Step 2 — Extract these elements from the source
-
-- **Main topic** → note title and H2 sections
-- **Key facts, rules, patterns** → bullet points and tables
-- **Code examples or APIs** → code blocks
-- **Comparisons** (X vs Y) → tables
-- **Decisions** (when to use X) → decision trees or if/then tables
-- **Things to remember** (interview tips) → `> 💡` callouts
-- **Related concepts mentioned** → wikilinks inline
-
-### Step 3 — Apply the correct template (section 6)
-
-### Step 4 — Add all wikilinks
-
-- Backlink to MOC
-- Backlink to source note (Introduced in / Source)
-- Forward links to every concept mentioned
-- For case studies: "Concepts used in this case study" section at the bottom
-
-### Step 5 — Add tags (section 4)
-
-### Step 6 — If this note is a case study, update existing concept notes
-
-Add the case study to the "Used in these case studies" section of every concept it links to. This keeps the graph bidirectional.
+See: [[Related Note]]
+```
 
 ---
 
 ## 9. GRAPH DESIGN INTENT
 
-The Obsidian graph should visually show these relationships:
+The Obsidian graph is the primary output of this vault. Every wikilink is an intentional edge.
+
+### Target graph topology
 
 ```
-FE SD - MOC (center hub)
+FE SD - MOC (center hub — highest degree node)
     │
-    ├── RADIO Framework
-    │       ├── Rendering Strategies
-    │       ├── State Management
-    │       ├── Networking & APIs
-    │       ├── Performance Optimization
-    │       ├── Caching Strategies
-    │       └── Accessibility (A11y)
+    ├── 03 - RADIO Framework (second-highest degree)
     │
-    ├── FE SD Question Types
-    │       ├── [links to all case studies]
-    │       └── [links to concept notes]
+    ├── Core Concepts (satellite cluster)
+    │     ├── Performance Optimization  ← most-linked concept node
+    │     ├── Networking and APIs
+    │     ├── State Management
+    │     ├── Rendering Strategies
+    │     ├── Caching Strategies
+    │     ├── Accessibility (A11y)
+    │     ├── Component Architecture
+    │     └── Internationalization (i18n)
     │
-    ├── Case Studies (cluster)
-    │       ├── Case Study - Facebook News Feed ──► Performance, State, Networking
-    │       ├── Case Study - Google Docs ──────────► Networking (WS), State, A11y
-    │       ├── Case Study - Messenger ────────────► Networking (WS), State
-    │       ├── Case Study - Netflix ──────────────► Performance, Networking (streaming)
-    │       ├── Case Study - Airbnb SEO ───────────► Rendering (SSR), Performance
-    │       ├── Case Study - Amazon ───────────────► Performance, Caching, Rendering
-    │       ├── Case Study - Instagram Upload ──────► Performance, Networking
-    │       ├── Case Study - Dropdown ─────────────► A11y, Component Architecture
-    │       ├── Case Study - Modal ────────────────► A11y, Component Architecture
-    │       └── Case Study - Image Carousel ────────► A11y, Performance
-    │
-    └── Core Concepts (satellite cluster)
-            ├── Rendering Strategies
-            ├── State Management
-            ├── Networking & APIs
-            ├── Performance Optimization ── (most-linked node)
-            ├── Caching Strategies
-            ├── Accessibility (A11y)
-            ├── Component Architecture
-            └── Internationalization (i18n)
+    └── Case Studies (dense cluster — each links to 4–8 concept nodes)
+          ├── Case Study - Facebook News Feed ──► Performance, State, Networking, Caching
+          ├── Case Study - Google Docs ──────────► Networking (WS), State, A11y, Performance
+          ├── Case Study - Messenger ────────────► Networking (WS), State, Performance
+          ├── Case Study - Netflix ──────────────► Performance, Networking, Caching, Rendering
+          ├── Case Study - Airbnb SEO ───────────► Rendering (SSR), Performance, i18n
+          ├── Case Study - Amazon ───────────────► Performance, Caching, Rendering, State
+          ├── Case Study - Instagram Upload ──────► Performance, Networking, State
+          ├── Case Study - Autocomplete ──────────► Performance, Networking, A11y, State
+          ├── Case Study - Dropdown ─────────────► A11y, Component Architecture, State
+          ├── Case Study - Modal ────────────────► A11y, Component Architecture, State
+          ├── Case Study - Image Carousel ────────► A11y, Performance, Component Architecture
+          └── Case Study - Lexical Rich Text ─────► State, Networking, Performance, A11y
 ```
 
-**Performance Optimization** should be the most-linked node — virtually every case study and the RADIO framework reference it.
+**Performance Optimization** must be the most-linked concept node — it is relevant to virtually every case study.
+
+**Accessibility (A11y)** must appear in every case study, at minimum in the Optimizations section.
 
 ---
 
-## 10. EXISTING NOTE SUMMARIES (for context reconstruction)
+## 10. HOW TO PROCESS NEW SOURCE MATERIAL
 
-### FE SD - MOC
+When the user provides a new article, screenshot, or URL from GreatFrontend, follow these steps in exact order.
 
-Central hub. Lists all notes under: Start Here, Core Topics, Core Concepts, Case Studies, Tags. Every other note links back to this.
+### Step 1 — Identify the note type
 
-### 01 - FE SD - Introduction
+| Source content | Note type | Folder | Filename |
+|---|---|---|---|
+| Intro / overview article | Guidebook note | `01 - Guidebook/` | `01 - FE SD - Introduction.md` |
+| Types of questions article | Guidebook note | `01 - Guidebook/` | `02 - FE SD - Types of Questions.md` |
+| RADIO framework article | Framework note | `01 - Guidebook/` | `03 - RADIO Framework.md` |
+| Evaluation / scoring article | Guidebook note | `01 - Guidebook/` | `04 - FE SD - Evaluation Axes.md` |
+| Common mistakes article | Guidebook note | `01 - Guidebook/` | `05 - FE SD - Common Mistakes.md` |
+| Cheatsheet | Guidebook note | `01 - Guidebook/` | `06 - FE SD - Cheatsheet.md` |
+| A specific system to design | Case study note | `03 - Case Studies/` | `Case Study - [Name].md` |
+| A technical concept | Concept note | `02 - Core Concepts/` | `[Concept Name].md` |
 
-Source: GreatFrontend intro article. Author: Yangshun Tay. Covers: what FE SD interviews are, why they're hard, why SD matters at senior level, the guide structure (Question Types → RADIO → Eval Axes → Common Mistakes → Case Studies), and the list of case studies in the guide.
+### Step 2 — Extract from the source
 
-### FE vs BE System Design
+- **Main topic** → H1 title and H2 section headings
+- **Key facts, rules, patterns** → prose and bullet points
+- **Comparisons** (X vs Y) → tables
+- **Code examples or APIs** → fenced code blocks with language identifier
+- **Decision guides** (when to use X) → decision tables
+- **Interview tips, things to memorize** → `> 💡` callouts
+- **Concepts mentioned by name** → inline wikilinks on first mention
 
-The exact comparison table from the GreatFrontend intro image. 7 rows: Requirements, Architecture (distributed vs client-side components), Capacity estimation (BE may need it, FE usually not), Data model (schema vs app state), Infrastructure (client vs server is black box), API types (gRPC/HTTP distributed vs component events + REST), Deep dives (SRAC for BE vs Performance/UX/A11y/i18n for FE). Includes the classic Facebook News Feed example showing how the same question differs.
+### Step 3 — Apply the correct template from Section 8
 
-### RADIO Framework
+Match the note type identified in Step 1 to the template in Section 8. Fill every section of the template. Do not skip sections — write `(Not applicable for this product)` if a section genuinely does not apply.
 
-**Critical nuance:** RADIO is a checklist, NOT a rigid linear sequence. Backtrack freely. Don't force it on narrow questions. Write "RADIO" on the whiteboard to track coverage.
+### Step 4 — Add all wikilinks
 
-R: functional vs non-functional requirements (defined + distinguished). Preferred approach = take initiative to list requirements yourself, get alignment. Core questions: features to focus on, core vs good-to-have, devices, offline, perf, SEO, a11y. Write down agreed requirements.
+- `Back to: [[FE SD - MOC]]` — mandatory in every note
+- Link every concept mentioned in the text on its first appearance
+- For case studies: fill the "Concepts used in this case study" section completely
+- For concept notes: fill the "Used in these case studies" section completely
 
-A: 4 layers (NOT 5): **Server** (black box), **View layer** (presentation + local state only), **Store/Model layer** (cross-cutting data, Redux/Zustand/Jotai/MobX, unidirectional flow), **Data access layer** (React Query/tRPC/Apollo — fetching, caching, error management; only layer affected by offline storage). Not every layer needed for every product. Also covers: separation of concerns, where computation happens (client vs server trade-off), verbally describe each box after drawing, News Feed component responsibilities table. Tools: Excalidraw, diagrams.net.
+### Step 5 — Add tags
 
-D: Server-originated data vs Client-only data. Client-only further splits into: Data to be persisted (sent to server eventually) vs Ephemeral data (OK to lose on tab close). Present as a table: Source | Entity | Belongs to | Fields. Iterative process — add fields as requirements evolve. List fields under the component that owns them in the architecture diagram.
+Apply tags from Section 5. Tags on line 2, one line, space-separated.
 
-I: Every API has 3 parts: Name/functionality, Parameters, Return value. Three interface types: (1) Server↔Client — 6 protocols: HTTP/REST (default), WebSockets (bidirectional real-time), SSE (server→client only), Long polling (fallback, rarely used now), GraphQL (flexible queries, unlikely needed in interviews), WebRTC (P2P media, very specific). Full News Feed GET /feed JSON example with cursor pagination. (2) Client↔Client — 3 patterns: Props+callbacks (foundational), Store dispatch (central store, actions have name+payload), Pub/sub event listeners (decoupled, most prevalent in browser). (3) UI Component props — 5 categories: Data props, Event/Callback props, Configuration/Behavior props, Styling/Presentation props, Render/Slot props. Only spend time on component API if the question is specifically about a component.
+### Step 6 — Update bidirectional links
 
-O: 2 guiding principles: (1) Focus on unique/important areas for this product. (2) Showcase your strengths. Available areas: Performance, Networking, UX, A11y, SEO, i18n, Multi-device, Security. CRITICAL — what to AVOID: JS framework debates, CSS framework choices, generic perf advice (unless core to problem), logging/analytics/monitoring, DevOps/CI/CD details, build tooling. Exception: mention framework only when it changes architectural trade-offs (e.g. SSR/SSG strategy, CDN/edge). Summary table. RADIO applied to News Feed with full corrected architecture (Data access layer → Store → Feed UI).
+If a new case study was created:
+- Go to every concept note it links to
+- Add this case study to the "Used in these case studies" section of each concept note
 
-### FE SD Question Types
+If a new concept note was created:
+- Go to every existing case study that is relevant
+- Add a link to this concept in its "Concepts used in this case study" section
 
-Two categories: Applications (16 types in table: News Feed, Messaging, E-commerce, Photo sharing, Travel, Video streaming, Pinterest, Collaborative, Email, Drawing, Maps, File storage, Video conf, Ridesharing, Music streaming, Games — each with companies, important features, important topics). UI Components: what to design (hierarchy, state, entry points), 4 focus areas, list of ~8 component examples, customizing theming section, RADIO applied per type table.
+### Step 7 — State the output path
 
-### FE SD Evaluation Axes
-
-7 axes: 1. Problem Clarification, 2. System Architecture, 3. Technical Depth, 4. Performance Awareness, 5. Accessibility & Inclusivity, 6. Internationalization, 7. Communication. Each has bullet points of what the interviewer is checking and wikilinks to relevant notes.
-
-### FE SD Common Mistakes
-
-7 mistakes in What/Why/Fix format: 1. Skipping requirements, 2. Treating FE SD like BE SD, 3. No performance discussion, 4. Forgetting accessibility, 5. No API design, 6. One-way communication, 7. No trade-offs.
-
-### _Case Study Template
-
-Blank RADIO-structured template. Sections: Requirements (Functional/Non-functional/Out of scope), Architecture (components + data flow), Data Model (TypeScript types + server vs client), Interface (Server API + Component API), Optimizations (Performance/A11y/Caching/Other), Concepts used (wikilinks).
-
-### Rendering Strategies
-
-CSR/SSR/SSG/ISR comparison table with pros/cons/best-for. Decision tree for which to choose. Hydration explanation and common pitfall (hydration mismatch). Links to Airbnb, Amazon, Facebook case studies.
-
-### State Management
-
-Two types: server state vs client UI state. More granular: URL state, Global UI, Server cache, Local component, Form state. State shape design with TypeScript example (FeedState). Key questions to ask about state. Links to 3 case studies.
-
-### Caching Strategies
-
-5 layers: CDN, HTTP cache, Service Worker, In-memory, localStorage/IndexedDB. Cache-Control headers with examples. Service Worker patterns (cache-first, network-first, stale-while-revalidate). React Query code example. Links to Amazon, Airbnb, Facebook case studies.
-
-### Performance Optimization
-
-Core Web Vitals table: LCP (<2.5s), INP (<200ms), CLS (<0.1) — note: INP replaced FID in March 2024. Loading techniques: code splitting, lazy loading, prefetch/preload, tree shaking, image optimization (WebP/AVIF, srcset). Runtime: list virtualization (react-virtual, react-window), memoization (React.memo, useMemo, useCallback), debounce vs throttle. Network performance. Rendering link. Links to 5 case studies.
-
-### Networking and APIs
-
-Protocol table: HTTP/REST, GraphQL, WebSockets, SSE, Long polling with when-to-use. REST API design rules (nouns not verbs, cursor-based pagination). WebSockets vs SSE comparison table. Optimistic updates pattern with code (dispatch → API call → rollback on error). Error handling patterns. Links to 4 case studies.
-
-### Accessibility (A11y)
-
-POUR principles table. Keyboard navigation checklist (7 items). ARIA patterns table for 6 components (Modal, Dropdown, Autocomplete, Tabs, Alert, Image). Focus management for modals and SPAs. Quick wins list (5 items). Links to 4 case studies.
-
----
-
-## 11. WHEN USER PROVIDES NEW SOURCE MATERIAL
-
-Do this in order:
-
-1. Read all content from the source (image/PDF/URL)
-2. Identify which note(s) to create or update
-3. Check the File Registry (section 3) — is this a STUB being filled or a new note?
-4. Apply the correct template from section 6
-5. Add all wikilinks (section 5)
-6. Add correct tags (section 4)
-7. Follow formatting rules (section 7)
-8. Output all files with their exact folder paths
-9. If a case study was created, also update the "Used in" section of relevant concept notes
-
-**Output format:** Create files at the correct paths. Always state the complete path, e.g.:
-
-- Guidebook note: `01 - Guidebook/03 - RADIO Framework.md`
-- Core concept: `02 - Core Concepts/Rendering Strategies.md`
-- Case study: `03 - Case Studies/Case Study - Facebook News Feed.md`
-
----
-
-## 12. WHAT TO NEVER DO
-
-- ❌ Never create a flat note without wikilinks back to MOC
-- ❌ Never use a concept name in text without linking it `[[Concept Name]]`
-- ❌ Never create a case study without the "Concepts used in this case study" section at the bottom
-- ❌ Never create a new concept that doesn't list "Used in these case studies"
-- ❌ Never use tags in the middle of a note — tags go on line 2 only
-- ❌ Never use Obsidian callout syntax (`> [!note]`) — use `> 💡` instead
-- ❌ Never use the word "and" in wikilinks where `&` is correct: `[[Networking & APIs]]` not `[[Networking and APIs]]`
-- ❌ Never write a case study without TypeScript types in the Data Model section
-- ❌ Never write a case study without actual API endpoint examples in the Interface section
-- ❌ Never add emoji outside of MOC headers
-
----
-
-## 13. REGENERATION COMMAND
-
-If an agent needs to regenerate this vault from scratch, create files in this exact order:
+Always state the complete folder path when outputting a file:
 
 ```
-00 - MOC/
-  FE SD - MOC.md
-
-01 - Guidebook/
-  01 - FE SD - Introduction.md
-  02 - FE SD - Types of Questions.md
-  03 - RADIO Framework.md
-  04 - FE SD - Evaluation Axes.md
-  05 - FE SD - Common Mistakes.md
-  06 - FE SD - Cheatsheet.md          ← STUB
-  FE vs BE System Design.md
-
-02 - Core Concepts/
-  Rendering Strategies.md
-  State Management.md
-  Caching Strategies.md
-  Performance Optimization.md
-  Networking and APIs.md
-  Accessibility (A11y).md
-  Component Architecture.md           ← STUB
-  Internationalization (i18n).md      ← STUB
-
-03 - Case Studies/
-  _Case Study Template.md
-  Case Study - Facebook News Feed.md
-  Case Study - Autocomplete.md
-  [remaining stubs as listed in section 3]
-
-CLAUDE.md                             ← vault root
+01 - Guidebook/03 - RADIO Framework.md
+02 - Core Concepts/Rendering Strategies.md
+03 - Case Studies/Case Study - Facebook News Feed.md
 ```
-
-Use section 10 (summaries) as content reference. Use section 6 (templates) for structure. Use section 5 for wikilinks. Use section 4 for tags.
 
 ---
 
-_Last updated: Folder structure refactored — 7 folders → 4 folders. `01 - Intro`, `02 - Framework`, `03 - Question Types`, `04 - Eval & Mistakes` consolidated into `01 - Guidebook`. `05 - Case Studies` → `03 - Case Studies`. `06 - Core Concepts` → `02 - Core Concepts`. Guidebook files now carry order-number prefixes (01–06) to match GreatFrontend sidebar sequence._ _Total notes: 14 filled + FE SD Cheatsheet (stub) + 2 concept stubs + 9 case study stubs._
+## 11. ABSOLUTE RULES — NEVER VIOLATE
+
+These are hard constraints. There are no exceptions.
+
+- ❌ Never create a note without `Back to: [[FE SD - MOC]]`
+- ❌ Never mention a concept in prose without linking it `[[Concept Name]]` on first mention
+- ❌ Never create a case study without TypeScript types in the Data Model section
+- ❌ Never create a case study without at least one real API endpoint in the Interface section
+- ❌ Never create a case study without the "Concepts used in this case study" section
+- ❌ Never create a concept note without the "Used in these case studies" section
+- ❌ Never put tags anywhere except line 2 of the note
+- ❌ Never use Obsidian native callout syntax `> [!note]` — always use `> 💡`
+- ❌ Never use H4 (`####`) or deeper
+- ❌ Never use emoji outside of MOC section headers and `> 💡` callouts
+- ❌ Never create new folders
+- ❌ Never place a file at the vault root (except `CLAUDE.md`)
+- ❌ Never skip the architecture diagram in a case study note
+- ❌ Never write a case study architecture using anything other than the 4-layer model (Server / View / Store / Data Access)
+- ❌ Never include the WebSocket events block in a case study that does not require real-time communication
+- ❌ Never include the Component props API block in an Application case study
+- ❌ Never use `[[Networking & APIs]]` — the correct wikilink is `[[Networking and APIs]]`
+- ❌ Never fabricate content not present in the provided source material — if something is unclear, note it as `[TODO: verify from source]`
+
+---
+
+## 12. REGENERATION ORDER
+
+If regenerating the entire vault from scratch, create files in this exact order:
+
+```
+1.  00 - MOC/FE SD - MOC.md
+2.  01 - Guidebook/01 - FE SD - Introduction.md
+3.  01 - Guidebook/FE vs BE System Design.md
+4.  01 - Guidebook/02 - FE SD - Types of Questions.md
+5.  01 - Guidebook/03 - RADIO Framework.md
+6.  01 - Guidebook/04 - FE SD - Evaluation Axes.md
+7.  01 - Guidebook/05 - FE SD - Common Mistakes.md
+8.  01 - Guidebook/06 - FE SD - Cheatsheet.md            ← STUB
+9.  02 - Core Concepts/Rendering Strategies.md
+10. 02 - Core Concepts/State Management.md
+11. 02 - Core Concepts/Caching Strategies.md
+12. 02 - Core Concepts/Performance Optimization.md
+13. 02 - Core Concepts/Networking and APIs.md
+14. 02 - Core Concepts/Accessibility (A11y).md
+15. 02 - Core Concepts/Component Architecture.md         ← STUB
+16. 02 - Core Concepts/Internationalization (i18n).md    ← STUB
+17. 03 - Case Studies/_Case Study Template.md
+18. 03 - Case Studies/Case Study - Facebook News Feed.md
+19. 03 - Case Studies/Case Study - Autocomplete.md
+20. 03 - Case Studies/Case Study - Google Docs.md        ← STUB
+21. 03 - Case Studies/Case Study - Netflix Media Player.md        ← STUB
+22. 03 - Case Studies/Case Study - Instagram Media Upload.md      ← STUB
+23. 03 - Case Studies/Case Study - Messenger Real-time Chat.md    ← STUB
+24. 03 - Case Studies/Case Study - Airbnb SEO.md                  ← STUB
+25. 03 - Case Studies/Case Study - Amazon E-commerce Performance.md ← STUB
+26. 03 - Case Studies/Case Study - Lexical Rich Text Editor.md    ← STUB
+27. 03 - Case Studies/Case Study - Dropdown Menu Component.md     ← STUB
+28. 03 - Case Studies/Case Study - Image Carousel Component.md    ← STUB
+29. 03 - Case Studies/Case Study - Modal Dialog Component.md      ← STUB
+```
+
+Use Section 8 templates for structure. Use Section 6 for wikilinks. Use Section 5 for tags. Use Section 7 for formatting.
+
+---
+
+*Version 2.0 — Complete rewrite. Stricter templates, explicit rules for every note type, mandatory sections enforced, wikilink naming corrected, graph topology documented.*

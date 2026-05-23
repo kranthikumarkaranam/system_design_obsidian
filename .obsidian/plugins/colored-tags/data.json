@@ -1,0 +1,27 @@
+{
+  "palette": {
+    "seed": 7,
+    "selected": "adaptive-soft",
+    "custom": "e12729-f37324-f8cc1b-72b043-007f4e"
+  },
+  "mixColors": true,
+  "transition": true,
+  "accessibility": {
+    "highTextContrast": false
+  },
+  "knownTags": {
+    "application": 1,
+    "case-study": 2,
+    "concept": 3,
+    "framework": 4,
+    "guide": 5,
+    "mistake": 6,
+    "performance": 7,
+    "source": 8,
+    "to-revise": 9,
+    "ui-component": 10,
+    "source/greatfrontend": 1
+  },
+  "tagColors": {},
+  "_version": 4
+}
