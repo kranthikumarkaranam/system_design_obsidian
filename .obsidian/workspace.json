@@ -4,17 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "15b96a997f6a6a34",
+        "id": "8b49ff90b9c0726b",
         "type": "tabs",
         "children": [
           {
-            "id": "a175e8be31f1921e",
+            "id": "89b2238848b4bcbe",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Obsidian Mobile Setup.md",
+                "mode": "preview",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Obsidian Mobile Setup"
             }
           }
         ]
@@ -76,8 +90,8 @@
             "state": {
               "type": "recent-files",
               "state": {},
-              "icon": "clock",
-              "title": "Recent files"
+              "icon": "lucide-ghost",
+              "title": "recent-files"
             }
           },
           {
@@ -102,6 +116,7 @@
             "state": {
               "type": "localgraph",
               "state": {
+                "file": "Obsidian Mobile Setup.md",
                 "options": {
                   "collapse-filter": true,
                   "search": "",
@@ -129,7 +144,7 @@
                 }
               },
               "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "title": "Graph of Obsidian Mobile Setup"
             }
           }
         ]
@@ -214,12 +229,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "Obsidian Mobile Setup.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline"
+              "title": "Outline of Obsidian Mobile Setup"
             }
           },
           {
@@ -240,12 +256,22 @@
             "state": {
               "type": "calendar",
               "state": {},
-              "icon": "calendar-with-checkmark",
-              "title": "Calendar"
+              "icon": "lucide-ghost",
+              "title": "calendar"
+            }
+          },
+          {
+            "id": "3c3d5566cbf4e8b2",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 7
       }
     ],
     "direction": "horizontal",
@@ -260,13 +286,15 @@
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
       "bases:Create new base": false,
+      "markdown-importer:Open format converter": false,
       "omnisearch:Omnisearch": false,
       "templater-obsidian:Templater": false,
-      "markdown-importer:Open format converter": false
+      "obsidian-git:Open Git source control": false
     }
   },
-  "active": "a175e8be31f1921e",
+  "active": "89b2238848b4bcbe",
   "lastOpenFiles": [
+    "Obsidian Mobile Setup.md",
     "IMP CONCEPTS.md",
     "Untitled.md",
     "IMP CONCEPTS 2.md",
