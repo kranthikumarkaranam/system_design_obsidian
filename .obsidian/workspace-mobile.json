@@ -11,14 +11,24 @@
             "id": "c6e5df5e217ba96f",
             "type": "leaf",
             "state": {
-              "type": "diff-view",
+              "type": "markdown",
               "state": {
-                "aFile": ".obsidian/community-plugins.json",
-                "bFile": ".obsidian/community-plugins.json",
-                "aRef": ""
+                "file": "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
-              "icon": "git-pull-request",
-              "title": "Diff: community-plugins.json"
+              "icon": "lucide-file",
+              "title": "Case Study - News Feed (e.g. Facebook)"
             }
           }
         ]
@@ -193,6 +203,8 @@
   },
   "active": "c6e5df5e217ba96f",
   "lastOpenFiles": [
+    "Obsidian Mobile Setup.md",
+    "/Obsidian Mobile Setup.md",
     "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
     "04 - Detailed Explanations/Why Entity Ranges are recommended.md",
     "04 - Detailed Explanations/Rendering rich text safely (XSS prevention).md",
