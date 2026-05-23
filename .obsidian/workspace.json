@@ -4,33 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "427932a07a0ebc16",
+        "id": "15b96a997f6a6a34",
         "type": "tabs",
         "children": [
           {
-            "id": "44ce5437fed594be",
+            "id": "a175e8be31f1921e",
             "type": "leaf",
-            "pinned": true,
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
-                "mode": "preview",
-                "source": true,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "pinned": true,
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "Case Study - News Feed (e.g. Facebook)"
+              "title": "New tab"
             }
           }
         ]
@@ -45,7 +29,6 @@
       {
         "id": "03420869c968c293",
         "type": "tabs",
-        "dimension": 60.14669926650367,
         "children": [
           {
             "id": "8a29009e28c58345",
@@ -66,7 +49,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "networking",
+                "query": "tag:case-study",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -96,20 +79,55 @@
               "icon": "clock",
               "title": "Recent files"
             }
-          }
-        ]
-      },
-      {
-        "id": "59ea78e24726c16d",
-        "type": "tabs",
-        "dimension": 39.85330073349633,
-        "children": [
+          },
           {
             "id": "dbeb4a39ab557a67",
             "type": "leaf",
             "state": {
               "type": "graph",
               "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            }
+          }
+        ]
+      },
+      {
+        "id": "c6f8249074c47081",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "649d7d412b494117",
+            "type": "leaf",
+            "state": {
+              "type": "localgraph",
+              "state": {
+                "options": {
+                  "collapse-filter": true,
+                  "search": "",
+                  "localJumps": 1,
+                  "localBacklinks": true,
+                  "localForelinks": true,
+                  "localInterlinks": false,
+                  "showTags": false,
+                  "showAttachments": false,
+                  "hideUnresolved": false,
+                  "collapse-color-groups": true,
+                  "colorGroups": [],
+                  "collapse-display": true,
+                  "showArrow": false,
+                  "textFadeMultiplier": 0,
+                  "nodeSizeMultiplier": 1,
+                  "lineSizeMultiplier": 1,
+                  "collapse-forces": true,
+                  "centerStrength": 0.518713248970312,
+                  "repelStrength": 10,
+                  "linkStrength": 1,
+                  "linkDistance": 250,
+                  "scale": 0.5852794253103915,
+                  "close": true
+                }
+              },
               "icon": "lucide-git-fork",
               "title": "Graph view"
             }
@@ -196,13 +214,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Case Study - News Feed (e.g. Facebook)"
+              "title": "Outline"
             }
           },
           {
@@ -248,39 +265,42 @@
       "markdown-importer:Open format converter": false
     }
   },
-  "active": "44ce5437fed594be",
+  "active": "a175e8be31f1921e",
   "lastOpenFiles": [
-    "03 - Case Studies/_Case Study Template.md",
-    "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
-    "03 - Case Studies/News Feed Architecture Diagram.png",
     "IMP CONCEPTS.md",
+    "Untitled.md",
+    "IMP CONCEPTS 2.md",
+    "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
+    "03 - Case Studies/Case Study - Autocomplete.md",
+    "04 - Detailed Explanations/Rendering rich text safely (XSS prevention).md",
+    "03 - Case Studies/Case Study - News Feed (e.g. Facebook)(1).md",
+    "Case Study Assets/News Feed/News Feed Architecture Diagram.png",
+    "Case Study Assets/News Feed",
+    "Case Study Assets",
+    "Case Study Assets/News Feed/News Feed Example.png",
+    "CLAUDE.md",
+    "Pasted image 20260521233416.png",
+    "IMP CONCEPTS(1).md",
+    "03 - Case Studies/Case Studies.md",
+    "03 - Case Studies/_Case Study Template.md",
+    "02 - Core Concepts/Accessibility (A11y).md",
+    "Templates/Case Study.md",
+    "Habit Tracking Dashboard.canvas",
+    "00 - MOC/FE SD - MOC.md",
     "02 - Core Concepts/Caching Strategies.md",
     "01 - Guidebook/FE vs BE System Design.md",
     "02 - Core Concepts/State Management.md",
     "01 - Guidebook/03 - RADIO Framework.md",
-    "Untitled.md",
     "Templates/Case Study - News Feed (e.g. Facebook) 1.md",
-    "Templates/Case Study.md",
-    "03 - Case Studies/News Feed Example.png",
-    "03 - Case Studies/Untitled.md",
-    "Pasted image 20260521233416.png",
     "Templates",
     "04 - Detailed Explanations/Why Entity Ranges are recommended.md",
     "reading offline.md",
     "Icon rendering.md",
-    "03 - Case Studies/Case Study - News Feed (e.g. Facebook) 2.md",
-    "04 - Detailed Explanations/Rendering rich text safely (XSS prevention).md",
     "04 - Detailed Explanations",
     "02 - Core Concepts/Infinite Scrolling.md",
     "02 - Core Concepts/Virtualized Lists.md",
     "Untitled test.png",
     "02 - Core Concepts/Untitled.md",
-    "02 - Core Concepts/Networking and APIs.md",
-    "AGENTS.md",
-    "FE Interview Prep/03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
-    "FE Interview Prep/02 - Core Concepts/Accessibility (A11y).md",
-    "FE Interview Prep/02 - Core Concepts/Caching Strategies.md",
-    "FE Interview Prep/02 - Core Concepts/Component Architecture.md",
     "FE Interview Prep/03 - Case Studies/News Feed architecture.png",
     "FE Interview Prep/03 - Case Studies/Untitled.base",
     "canvas.png",
@@ -291,8 +311,6 @@
     "FE Interview Prep/04 - Eval & Mistakes",
     "FE Interview Prep/02 - Framework",
     "FE Interview Prep/01 - Guidebook",
-    "FE Interview Prep/05 - Eval Criteria",
-    "FE Interview Prep/03 - Case Studies",
-    "FE Interview Prep/03 - Question Types"
+    "FE Interview Prep/05 - Eval Criteria"
   ]
 }

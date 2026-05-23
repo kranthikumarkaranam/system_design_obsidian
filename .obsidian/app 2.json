@@ -1,0 +1,12 @@
+{
+  "alwaysUpdateLinks": true,
+  "promptDelete": true,
+  "defaultViewMode": "source",
+  "livePreview": true,
+  "showLineNumber": true,
+  "tabSize": 4,
+  "vimMode": false,
+  "showUnsupportedFiles": true,
+  "trashOption": "local",
+  "uriCallbacks": true
+}

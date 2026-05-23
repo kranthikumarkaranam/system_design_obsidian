@@ -1,20 +1,48 @@
 {
   "recentFiles": [
     {
+      "basename": "IMP CONCEPTS",
+      "path": "IMP CONCEPTS.md"
+    },
+    {
       "basename": "Case Study - News Feed (e.g. Facebook)",
       "path": "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md"
     },
     {
-      "basename": "_Case Study Template",
-      "path": "03 - Case Studies/_Case Study Template.md"
+      "basename": "Case Study - Autocomplete",
+      "path": "03 - Case Studies/Case Study - Autocomplete.md"
+    },
+    {
+      "basename": "Rendering rich text safely (XSS prevention)",
+      "path": "04 - Detailed Explanations/Rendering rich text safely (XSS prevention).md"
     },
     {
       "basename": "News Feed Architecture Diagram",
-      "path": "03 - Case Studies/News Feed Architecture Diagram.png"
+      "path": "Case Study Assets/News Feed/News Feed Architecture Diagram.png"
     },
     {
-      "basename": "IMP CONCEPTS",
-      "path": "IMP CONCEPTS.md"
+      "basename": "News Feed Example",
+      "path": "Case Study Assets/News Feed/News Feed Example.png"
+    },
+    {
+      "basename": "CLAUDE",
+      "path": "CLAUDE.md"
+    },
+    {
+      "basename": "Case Studies",
+      "path": "03 - Case Studies/Case Studies.md"
+    },
+    {
+      "basename": "Accessibility (A11y)",
+      "path": "02 - Core Concepts/Accessibility (A11y).md"
+    },
+    {
+      "basename": "Case Study",
+      "path": "Templates/Case Study.md"
+    },
+    {
+      "basename": "FE SD - MOC",
+      "path": "00 - MOC/FE SD - MOC.md"
     },
     {
       "basename": "Caching Strategies",
@@ -33,24 +61,8 @@
       "path": "01 - Guidebook/03 - RADIO Framework.md"
     },
     {
-      "basename": "Case Study",
-      "path": "Templates/Case Study.md"
-    },
-    {
-      "basename": "News Feed Example",
-      "path": "03 - Case Studies/News Feed Example.png"
-    },
-    {
-      "basename": "Pasted image 20260521233416",
-      "path": "Pasted image 20260521233416.png"
-    },
-    {
       "basename": "Why Entity Ranges are recommended",
       "path": "04 - Detailed Explanations/Why Entity Ranges are recommended.md"
-    },
-    {
-      "basename": "Rendering rich text safely (XSS prevention)",
-      "path": "04 - Detailed Explanations/Rendering rich text safely (XSS prevention).md"
     }
   ],
   "omittedPaths": [],

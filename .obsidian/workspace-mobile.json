@@ -15,7 +15,17 @@
               "state": {
                 "file": "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
                 "mode": "source",
-                "source": false
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
               "icon": "lucide-file",
               "title": "Case Study - News Feed (e.g. Facebook)"
@@ -158,6 +168,8 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "markdown-importer:Open format converter": false,
+      "templater-obsidian:Templater": false,
       "omnisearch:Omnisearch": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
@@ -168,7 +180,7 @@
       "bases:Create new base": false
     }
   },
-  "active": "0fe939cac61428ea",
+  "active": "c6e5df5e217ba96f",
   "lastOpenFiles": [
     "04 - Detailed Explanations/Why Entity Ranges are recommended.md",
     "04 - Detailed Explanations/Rendering rich text safely (XSS prevention).md",

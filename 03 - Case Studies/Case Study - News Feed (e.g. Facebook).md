@@ -16,22 +16,28 @@ Real-life examples:
 ---
 ---
 
-## The question
+# The Question
 
+> [!Question]
 > Design a web news feed application that lets users browse a feed of posts, react to posts, and create new posts.
 
 ![[News Feed Example.png|416]]
 
-Assume: primarily text and image posts. Focus on FE architecture and the client/server contract for loading, rendering, and updating the feed.
+**Assume:** primarily text and image posts. Focus on FE architecture and the client/server contract for loading, rendering, and updating the feed.
 
-Real-life examples: Facebook, Twitter, Quora, Reddit.
 
-> ⭐ ==Cover the core architecture first:==
+> [!Example] Real-life Examples:
+> - Facebook
+> - Twitter
+> - Quora
+> - Reddit.
+
+> [!Tip] Cover the core architecture first:
 > This question can go deep, but in interviews you should focus first on requirements, rendering and navigation defaults, state shape, and API shape. Only dive into pagination edge cases, virtualization, stale-session handling, or live updates if the interviewer asks for more depth.
 
 ---
 
-## R — Requirements exploration
+# R — Requirements exploration
 
 ### Functional requirements (core scope)
 
@@ -52,7 +58,7 @@ Real-life examples: Facebook, Twitter, Quora, Reddit.
 - Handle long-lived sessions, stale data, feed performance
 - Mobile experience is a nice-to-have; architecture stays web-first
 
-### Clarifying questions to ask
+## Clarifying questions to ask
 
 - What post types? Text + image is enough to cover rendering, media loading, pagination, and mutations
 - What pagination UX? Infinite scrolling — more posts added when user reaches end
@@ -60,7 +66,7 @@ Real-life examples: Facebook, Twitter, Quora, Reddit.
 
 ---
 
-## A — Architecture / High-level design
+# A — Architecture / High-level design
 
 ### Decision 1: Rendering approach
 
@@ -70,7 +76,7 @@ Real-life examples: Facebook, Twitter, Quora, Reddit.
 |**CSR**|Server sends minimal shell + JS; browser renders|Great interactivity, long-session state|Slower first load, weaker SEO|
 |**Hybrid**|SSR for initial page, CSR after hydration|Best of both|Most complex|
 
->✅ ==Default to CSR for the signed-in home feed==
+>[!Check] Default to CSR for the signed-in home feed
 The feed is personalized (SEO is irrelevant), highly interactive, and benefits from keeping state alive across a long session. SSR/hybrid is correct for public post pages, marketing surfaces, or logged-out experiences.
 
 To keep LCP competitive in CSR: tight budgets on app-shell bytes, initial feed data, and critical JS. In practice, frameworks like [Next.js](https://nextjs.org/) and [TanStack Start](https://tanstack.com/start/latest) let products mix rendering strategies by route or surface when needed, which is how a product can keep the signed-in home feed on CSR while still serving public post permalinks with SSR.
@@ -94,15 +100,15 @@ To keep LCP competitive in CSR: tight budgets on app-shell bytes, initial feed d
 |**Data access**|Abstracts server APIs. Handles fetching, caching policy, pagination, retries, normalization of raw API responses.|React Query (TanStack), tRPC, Relay, Apollo Client|
 |**Server**|Black box. Exposes HTTP endpoints for feed, single post, post creation, media upload, reactions, shares.|—|
 
-> 💡 In an SPA, Store and Data access layers initialize once on first load and persist throughout the session.
+> In an SPA, Store and Data access layers initialize once on first load and persist throughout the session.
 
-Read more in [Rendering on the web](https://web.dev/rendering-on-the-web/) and the ["Rebuilding our tech stack for the new Facebook.com" blog post](https://engineering.fb.com/2020/05/08/web/facebook-redesign/).
+*Read more in [Rendering on the web](https://web.dev/rendering-on-the-web/) and the ["Rebuilding our tech stack for the new Facebook.com" blog post](https://engineering.fb.com/2020/05/08/web/facebook-redesign/).*
 
 ---
 
-## D — Data model
+# D — Data model
 
-> 💡 **Model for efficient rendering and frequent updates — not just mirroring raw API responses.** 
+> **Model for efficient rendering and frequent updates — not just mirroring raw API responses.** 
 > The feed is NOT a nested array of post objects. It is an ordered list of post IDs + pagination metadata.
 
 ### Post entity
@@ -160,7 +166,7 @@ type User = {
 };
 ```
 
-> 💡 User data is shared across many posts. Treat it as a **globally cached entity** — not duplicated inside each post. A profile update then reflects everywhere immediately.
+> User data is shared across many posts. Treat it as a **globally cached entity** — not duplicated inside each post. A profile update then reflects everywhere immediately.
 
 ### Feed entity
 
@@ -246,14 +252,14 @@ erDiagram
 ```
 
 
-> ⭐ ==**Do not model the feed as a nested array of full post objects**==
+> [!Tip] Do not model the feed as a nested array of full post objects
 > Denormalized (`NestedPost { id, author: User, media: Media[] }`) means one profile update requires finding and rewriting every embedded copy. Normalization means `usersById[id]` change reflects everywhere instantly.
 
-_Further reading: [Making Instagram.com faster: Part 3, cache first](https://instagram-engineering.com/making-instagram-com-faster-part-3-cache-first-6f3f130b9669)_
+_Further Reading: [Making Instagram.com faster: Part 3, cache first](https://instagram-engineering.com/making-instagram-com-faster-part-3-cache-first-6f3f130b9669)_
 
 ---
 
-## I — Interface definition (API)
+# I — Interface definition (API)
 
 ### API boundaries
 
@@ -264,9 +270,9 @@ _Further reading: [Making Instagram.com faster: Part 3, cache first](https://in
 |Data access|Store|JavaScript|Normalize responses, write cached entities + pagination state|
 |Store|View|JavaScript|Provide rendered state (posts, reactions, drafts, freshness)|
 
-> ℹ️ ==**Feed identity should come from the authenticated session**==
+> [!Info] Feed identity should come from the authenticated session
 > A caller-supplied `userId` is not a safe source of truth. Trusting the session instead avoids security mistakes and unnecessary API differences based on who the caller claims to be.
-### Fetch feed 
+### Fetch feed
 
 ```
 GET /feed
@@ -274,7 +280,7 @@ Params: { count: number, cursor?: string, direction?: 'older' | 'newer' }
 Auth:   Session cookie (NOT caller-supplied userId — security risk)
 ```
 
-> 💡 Use `direction: 'older'` for infinite scroll down, `direction: 'newer'` for background stale-check. `count` adapts based on `window.innerHeight` in CSR (server doesn't know viewport size so it overfetches slightly on SSR initial load).
+> Use `direction: 'older'` for infinite scroll down, `direction: 'newer'` for background stale-check. `count` adapts based on `window.innerHeight` in CSR (server doesn't know viewport size so it overfetches slightly on SSR initial load).
 
 #### Pagination: cursor-based vs offset-based
 
@@ -286,10 +292,10 @@ Auth:   Session cookie (NOT caller-supplied userId — security risk)
 | Best for       | Static lists (search results, admin tables)             | Dynamic feeds                             |
 
 
-> ✅ ==**For dynamic feeds, reach for cursor-based pagination by default**==
+> [!Check] For dynamic feeds, reach for cursor-based pagination by default
 > Cursor also enables bidirectional navigation — scroll down for older (`olderCursor`), background-check for newer (`newerCursor`).
 
-_Reference: [Evolving API Pagination at Slack](https://slack.engineering/evolving-api-pagination-at-slack)_
+*Further Reading: [Evolving API Pagination at Slack](https://slack.engineering/evolving-api-pagination-at-slack)*
 
 #### Dynamic loading count
 
@@ -305,7 +311,7 @@ The feed API exposes a `count` or `limit` parameter alongside the cursor. Use th
 - **In-flight deduplication:** Data access layer coalesces identical in-flight requests and cancels superseded ones via `AbortController`. TanStack Query and Relay do this by default.
 - **Idempotency keys:** Generate a UUID on the client **at submit time** (not at request-fire time) and attach it to every mutating request (`Idempotency-Key` header or request body). Server treats duplicate keys as the same write — no duplicate posts from retries.
 
-> ✅ **==Attach an idempotency key at submit time for every mutating request==**
+> [!Check] Attach an idempotency key at submit time for every mutating request
 > Generate the idempotency key **when the user submits**, not when the request fires. This ensures retries by the client, Service Worker, or network proxy all carry the original key.
 
 
@@ -325,7 +331,7 @@ The feed API exposes a `count` or `limit` parameter alongside the cursor. Use th
 1. `POST /media/uploads` → receive `mediaId` (or presigned URL for direct blob upload)
 2. `POST /posts` with `{ body: PostBody, mediaIds: [mediaId] }`
 
-> ✅ **==Upload media binaries first, then create the post by `mediaId`==**
+> [!Check] Upload media binaries first, then create the post by `mediaId`
 > In production, the upload endpoint returns a presigned URL so the client uploads directly to blob storage — keeping large binaries off the application server and letting post creation stay a small JSON request.
 
 For simplicity, we'll assume attachments are directly uploaded to the app server and a `mediaId` is returned.
@@ -396,9 +402,9 @@ sequenceDiagram
 
 ---
 
-## O — Optimizations and deep dive
+# O — Optimizations and deep dive
 
-> ⭐ **==This section is intentionally deeper than the minimum interview answer==**
+> [!Important] This section is intentionally deeper than the minimum interview answer
 > In most interviews, cover the core architecture first and use these optimizations only as follow-up depth when the interviewer asks you to go further.
 
 ### O1 — Feed list
@@ -418,9 +424,9 @@ Facebook and Twitter both use virtualized lists.
 
 **Virtualization tradeoffs to name proactively:**
 
-- Focused element scrolled out of viewport gets unmounted → loses focus.
+- ***Problem:*** Focused element scrolled out of viewport gets unmounted → loses focus.
 	***Fix:*** keep recently focused items mounted OR restore focus programmatically on remount.
-- `Ctrl/Cmd+F` find-in-page only searches present DOM. 
+- ***Problem:*** `Ctrl/Cmd+F` find-in-page only searches present DOM. 
 	***Fix:*** widen overscan when find-in-page is invoked via a keydown hint, or offer in-app search.
 
 #### Infinite scrolling — implementation
@@ -432,21 +438,22 @@ Render a sentinel element at the bottom of the feed and detect when it enters th
 | `scroll` event listener | Throttled listener + `Element.getBoundingClientRect()` | ❌ Runs synchronously, forces layout on every scroll |
 | **Intersection Observer API** | Browser callback when sentinel enters viewport | ✅ Preferred — browser-batched, no layout forcing |
 
-> ✅ ==**Prefer Intersection Observer over scroll + `getBoundingClientRect()`**==
+> [!Check] Prefer Intersection Observer over scroll + `getBoundingClientRect()`
 > Use it for infinite-scroll triggers and prefetch boundaries. Scroll handlers run synchronously and `getBoundingClientRect()` can force layout; Intersection Observer lets the browser batch visibility checks and deliver callbacks without your code polling layout on every scroll.
 
 **Trigger distance:** ~1 viewport height — wide enough to load before the user hits the bottom, narrow enough to avoid wasted fetches. Can be made dynamic based on network speed and scroll velocity.
 
 The same IO instance can double as a **prefetch boundary**, so users rarely see a loading state at all.
 
-see more: [[Infinite Scrolling]]
+*Deep Dive: [[Infinite Scrolling]]*
 
 #### Loading indicators
 
 - **Avoid** a single spinner — doesn't preserve layout
 - **Use** skeleton placeholders matching post structure → users scan layout immediately, real content swaps in with minimal visual jump
 - A shimmer animation can layer on top of the skeleton
-see more:  [shimmer loading effect](https://docs.flutter.dev/cookbook/effects/shimmer-loading)
+
+*Further Reading: [shimmer loading effect](https://docs.flutter.dev/cookbook/effects/shimmer-loading)*
 
 #### Scroll position restoration
 
@@ -465,7 +472,7 @@ Three approaches when `lastFetchedAt` is old:
 2. **Silently prepend new posts** — ❌ disrupts user's reading position
 3. **"New posts available" banner** ✅ — preserves reading position, user controls when to merge
 
-> ℹ️ **==Avoid silently prepending new posts while the user is reading==**
+> [!Info] Avoid silently prepending new posts while the user is reading
 > A banner such as "New posts available" is usually safer because it preserves reading position and lets the user choose when to merge newer content.
 
 **Beyond time-based staleness:**
@@ -473,7 +480,7 @@ Three approaches when `lastFetchedAt` is old:
 - **Server-driven invalidation:** server pushes a version/high-water-mark over the live-update channel. Viral posts or deleted posts reflect immediately without waiting for a refresh check.
 - **Cross-tab invalidation:** User with two tabs — reacting in one leaves the other stale. Fix: `BroadcastChannel` that Data access layer writes to on every canonical entity mutation. Peer tabs subscribe and re-read the affected record. With IndexedDB-backed store, `Web Locks API` can elect a leader tab to own long-lived socket or polling state.
 
-> ℹ️ **==Pair optimistic updates with a cross-tab invalidation signal==**
+> [!Info] Pair optimistic updates with a cross-tab invalidation signal
 > Shared storage alone does not notify other tabs of changes. Without a `BroadcastChannel` or equivalent, a reaction applied in one tab will sit stale in another tab until the user interacts with it.
 
 ---
@@ -503,7 +510,7 @@ This idea applies to: hover cards, richer composer tools, interaction-heavy widg
 
 **Caveat:** Dynamic renderer chunks can create a data-then-code waterfall. Common above-the-fold renderers should be part of **Tier 2** loading or prefetched once the initial feed payload makes their need likely — so the first visible posts don't wait on a second round-trip.
 
-_Source: [Rebuilding our tech stack for the new Facebook.com](https://engineering.fb.com/2020/05/08/web/facebook-redesign/)_
+_Further Reading: [Rebuilding our tech stack for the new Facebook.com](https://engineering.fb.com/2020/05/08/web/facebook-redesign/)_
 
 #### Rendering mentions/hashtags
 
@@ -517,10 +524,12 @@ _Source: [Rebuilding our tech stack for the new Facebook.com](https://engineeri
 | **HTML** format ❌       | Store rendered HTML                                                    | **Never** — XSS vector, web-only coupling  |
 **Entity ranges:** Store the plaintext once and attach metadata describing which character ranges correspond to mentions, hashtags, or links. Compact because text is stored exactly once and easy to render on any client. Edits become trickier — inserting or deleting characters requires updating indexes — but that's a composer concern, not a storage concern. The editor can keep a richer tree model internally and serialize to entity ranges at the API boundary.
 
-> ℹ️ **==In the example above, `start` is inclusive and `end` is exclusive==**
+> [!Info] In the example above, `start` is inclusive and `end` is exclusive
 > This is a half-open range matching `String.prototype.slice` semantics. Stating the convention explicitly matters because an off-by-one here silently breaks mention and link boundaries at render time.
 
-*detailed explanation*: [[Why Entity Ranges are recommended]]
+*Deep Dive: [[Why Entity Ranges are recommended]]*
+
+
 
 **Custom syntax:** Captures entity ID + user-customizable display text inline (e.g. `[[#1234: HBO Max]]`). Hashtags need no special syntax — a `#word` regex at render time is enough. A good fit for products that don't anticipate growing the set of rich-text entity types.
 
@@ -529,7 +538,7 @@ _Source: [Rebuilding our tech stack for the new Facebook.com](https://engineeri
 **HTML format (anti-pattern):** Beyond being an XSS vector, stored HTML couples the API to web-specific markup — the same payload becomes hard to reuse on iOS, Android, or any non-web client. It also makes it harder to re-decorate mentions or hashtags later (e.g. adding hover cards, updating display names).
 
 
->⚠️**==Do not store user-generated post content as raw HTML on the server==**
+>[!Caution] Do not store user-generated post content as raw HTML on the server
 >Rendering server-stored HTML is a direct XSS vector, and it also couples the API to web-specific markup, making the same payload harder to reuse on iOS, Android, or any non-web client.
 
 
@@ -538,14 +547,14 @@ _Source: [Rebuilding our tech stack for the new Facebook.com](https://engineeri
 Entity ranges close the storage-level XSS door — but not all render-time doors:
 
 - **Output encode:** Modern frameworks (React, Vue, Svelte) escape text by default. Never use `dangerouslySetInnerHTML` unless content passed through a sanitizer like [DOMPurify](https://github.com/cure53/DOMPurify)
-- **Validate `href` URL schemes:** Mention/link entities can carry `javascript:`, `data:`, or `vbscript:` URLs. Allowlist only `http`, `https`, `mailto` — reject/strip everything else **at render time**, not only at submission.
+- **Validate** `href` **URL schemes:** Mention/link entities can carry `javascript:`, `data:`, or `vbscript:` URLs. Allowlist only `http`, `https`, `mailto` — reject/strip everything else **at render time**, not only at submission.
 - **Harden outbound links:** `rel="noopener noreferrer"` on every `target="_blank"` link — prevents `window.opener` tab-nabbing.
 - **Content Security Policy:** `default-src 'self'`, tight `script-src`, `img-src` allowlist for the product's media CDN. Defence-in-depth for feed products that render links, images, and embeds from arbitrary third-party sources.
 
-> ⚠️ **==Validate every user-controlled URL scheme before rendering==**
+> [!Caution] Validate every user-controlled URL scheme before rendering
 > `javascript:` and `data:` URLs in mention or link entities render as clickable bombs. Allowlist `http`, `https`, and `mailto`; reject everything else at render time, not only at submission time.
 
-*detailed explanation*: [[Rendering rich text safely (XSS prevention)]]
+*Deep Dive: [[Rendering rich text safely (XSS prevention)]]*
 
 #### Rendering images
 
@@ -566,7 +575,7 @@ Entity ranges close the storage-level XSS door — but not all render-time doors
 
 If the feed later supports video, the same principles still apply. Poster frames, deferred playback, and adaptive bitrate streaming are natural follow-up optimizations.
 
->⚠️ **==Strip EXIF metadata from user-uploaded images before leaving the device==**
+>[!Caution] Strip EXIF metadata from user-uploaded images before leaving the device
 >Camera EXIF blocks routinely contain GPS coordinates and device identifiers. Re-encoding the image through `<canvas>` in the composer both removes the metadata and lets the client apply the orientation flag so portraits do not render sideways.
 
 #### Lazy load code not needed for initial render
@@ -594,7 +603,7 @@ Success: reconcile with server's authoritative engagementSummary
 Failure: revert to previous state, show error toast
 ```
 
-Works for: reactions, shares, post creation (insert temporary local post, then reconcile with server id).
+**Works for:** reactions, shares, post creation (insert temporary local post, then reconcile with server id).
 ##### Reaction flow with optimistic update and rollback (Mermaid Diagram)
 
 ```mermaid
@@ -627,7 +636,7 @@ end
 - **Offline writes:** land in outbox (covered in the resilience section below) rather than silently vanishing — show pending indicator
 - **Idempotency keys** keep retries safe — server treats replayed reaction or post creation as same event, not duplicate
 
-Built into: [Relay](https://relay.dev/docs/guided-tour/updating-data/graphql-mutations/#optimistic-updates), [SWR](https://swr.vercel.app/docs/mutation#optimistic-updates), and [React Query](https://tanstack.com/query/latest/docs/framework/react/overview).
+**Built into:** [Relay](https://relay.dev/docs/guided-tour/updating-data/graphql-mutations/#optimistic-updates), [SWR](https://swr.vercel.app/docs/mutation#optimistic-updates), and [React Query](https://tanstack.com/query/latest/docs/framework/react/overview).
 
 #### Timestamp rendering
 
@@ -637,7 +646,7 @@ Built into: [Relay](https://relay.dev/docs/guided-tour/updating-data/graphql-mut
 
 1. Server returns raw timestamp → client formats. Flexible but requires shipping grammar rules for all languages.
 2. Server returns translated timestamp → no client grammar needed, but client can't manipulate.
-3. **`Intl` API** ✅ — `Intl.DateTimeFormat()` and `Intl.RelativeTimeFormat()` — best default.
+3. `Intl` **API** ✅ — `Intl.DateTimeFormat()` and `Intl.RelativeTimeFormat()` — best default.
 
 ```javascript
 // Relative time in Chinese
@@ -659,7 +668,7 @@ console.log(
 
 **Problem 2: Stale relative timestamps**
 
-> ✅ **==Refresh recent relative timestamps with a low-frequency timer==**
+> [!Check] Refresh recent relative timestamps with a low-frequency timer
 > Without it, "2 minutes ago" can sit on screen for hours in a long-lived session. Older timestamps can stay static because the next bucket boundary (days, weeks, months) is far enough away that the user is unlikely to notice drift.
 
 #### Icon rendering
@@ -673,7 +682,7 @@ console.log(
 | **Inline SVG**  | SVG markup directly in HTML         | Instant render + no request | Repeated SVG increases HTML/JS size                                                    | ✅ Preferred        |
 Facebook/Twitter use Inline SVG because immediate rendering matters more than tiny bundle increases — this is the current standard approach.
 
-_Source: ["Rebuilding our tech stack for the new Facebook.com" blog post](https://engineering.fb.com/2020/05/08/web/facebook-redesign/)_
+*Further Reading: ["Rebuilding our tech stack for the new Facebook.com" blog post](https://engineering.fb.com/2020/05/08/web/facebook-redesign/)*
 
 #### Post truncation
 
@@ -690,12 +699,12 @@ _Source: ["Rebuilding our tech stack for the new Facebook.com" blog post](https
 
 `<input>` and `<textarea>` only support plain text. `contenteditable` attribute enables a rich text editor. However, it is not a good idea to use `contenteditable="true"` as-is in production because it [comes with many issues](https://medium.engineering/why-contenteditable-is-terrible-122d8a40e480?gi=6b03d73f8e36). It'd be better to use battle-tested rich text editor libraries.
 
-> ⭐ `contenteditable` **is a browser primitive, not a full editor**
+> [!Important] `contenteditable` **is a browser primitive, not a full editor**
 > It isn't a production editor architecture on its own. Use it underneath an editor framework or a carefully designed editing model rather than relying on the browser's default rich-text behavior directly.
 
 Editor libraries: **Lexical** (Meta, actively maintained), TipTap, Slate. Draft.js (Meta) is deprecated.
 
-> ✅ **==The editor's internal model need not match the wire format==**
+> [!Check] The editor's internal model need not match the wire format
 > A composer can use a rich tree model for selection and undo, while the API and storage format benefits from being compact and easy to render. Serialize between the two at the boundary instead of forcing one shape to do both jobs. This also allows the same model to be rendered on platform-specific surfaces like web / iOS / Android.
 
 #### Composer XSS (paste and drop)
@@ -707,7 +716,7 @@ Composer is an XSS entry point:
 
 **Fix:** Intercept `paste` and `drop` events. Read `text/plain` from `DataTransfer`, discard `text/html` (or pass through [DOMPurify](https://github.com/cure53/DOMPurify) with an explicit allowlist of tags).
 
-_Source: [Facebook open sources rich text editor framework Draft.js](https://engineering.fb.com/2016/02/26/web/facebook-open-sources-rich-text-editor-framework-draft-js/)_
+_Further Reading: [Facebook open sources rich text editor framework Draft.js](https://engineering.fb.com/2016/02/26/web/facebook-open-sources-rich-text-editor-framework-draft-js/)_
 
 #### Lazy load composer dependencies
 
@@ -741,9 +750,9 @@ Service Worker caches:
 
 User who opens app offline sees the last feed they scrolled, with posts clearly flagged as cached.
 
-TanStack Query persists its cache to IndexedDB — client-side store survives tab reloads, feed renders from cache while background fetch revalidates.
+**TanStack Query** persists its cache to **IndexedDB** — client-side store survives tab reloads, feed renders from cache while background fetch revalidates.
 
-Extra UI: "connection lost" banner, disabled write controls, cached-post indicators.
+**Extra UI:** "connection lost" banner, disabled write controls, cached-post indicators.
 
 #### Writing offline — outbox pattern
 
@@ -796,15 +805,15 @@ The [Background Sync API](https://developer.mozilla.org/en-US/docs/Web/API/Back
 - **Exponential backoff + jitter**: doubling delays with random offset — prevents thundering herd of clients reconnecting in lockstep after an outage
 - **Cap retry count**: permanent failures surface as errors instead of retrying forever
 - **Short-circuit on non-retryable codes**: `400`, `401`, `403`, `404`, `422` — won't succeed on retry, fail immediately
-> 400 Bad Request  
-> 401 Unauthorized  
-> 403 Forbidden  
-> 404 Not Found  
-> 422 Validation Error
+> 400 → Bad Request  
+> 401 → Unauthorized  
+> 403 → Forbidden  
+> 404 → Not Found  
+> 422 → Validation Error
 - Combine this with the request deduplication and idempotency keys from the API section, and the write path becomes safe under any mix of client retries, Service Worker retries, and network middlebox retries. The server always sees the same key and returns the same response.
 
 
-> ✅ **Pair optimistic writes with an outbox and idempotency keys.** 
+> [!Check] Pair optimistic writes with an outbox and idempotency keys.
 > Without the outbox, a dropped connection loses the user's action the moment the tab closes. Without idempotency keys, a retry from either the client or the Service Worker creates duplicate posts. Together, the outbox and idempotency keys make optimistic UI reliable even when requests are retried or the tab closes.
 
 ---
@@ -822,6 +831,9 @@ Same rules as posts apply:
 
 #### Live comment updates
 
+> [!Info] Treat live comment updates as advanced follow-up depth
+> They aren't part of the core answer for this question. The base solution can stop at paginated comment loading unless the interviewer explicitly asks about real-time behavior.
+
 |Method|Direction|Notes|
 |---|---|---|
 |Short polling|Client → Server (repeated)|Simple but highest network traffic + server load|
@@ -829,7 +841,7 @@ Same rules as posts apply:
 |**SSE**|Server → Client only|Simple, efficient, reconnects automatically via `Last-Event-ID`|
 |**WebSockets**|Bidirectional|✅ Default for FB-scale feed — one socket multiplexes comments + reactions + typing indicators|
 
-> ✅ **Default to WebSockets for live updates; use SSE where only push is needed** 
+> [!Check] Default to WebSockets for live updates; use SSE where only push is needed
 > A feed needs bidirectional traffic for subscription management and acknowledgments. WebSockets carry that over one connection, while SSE needs separate client-to-server HTTP requests for subscriptions and acknowledgments. SSE earns its place as a fallback on networks where the WebSocket upgrade is blocked, or on simpler products where only server-to-client push is needed.
 
 Polling reserved for low-priority freshness checks (new-post banner) where lower operational cost justifies latency.
@@ -841,7 +853,7 @@ Production systems layer an application-specific protocol on WebSockets: subscri
 - Subscribe/unsubscribe based on post **visibility** (IntersectionObserver) — don't update off-screen posts
 - **Hot posts** (celebrities, politicians, breaking news): downgrade to count-only updates. Pushing every event is unreadable and wastes CPU + server fan-out. Debounce/throttle high-frequency update streams.
 
-> ✅ **Scope live updates to visible posts, and throttle hot posts**
+> [!Check] Scope live updates to visible posts, and throttle hot posts
 > For high-traffic posts (celebrities, politicians, breaking news), downgrade to count-only updates. Pushing every event for every loaded post wastes both client CPU and server fan-out, and individual comment-level updates become unreadable on hot posts anyway.
 
 ---
@@ -858,9 +870,11 @@ A long-lived, interaction-heavy feed should be measured by the [Core Web Vitals
 |**INP** — Interaction to Next Paint|Responsiveness during scroll, reactions, live updates|< 200ms|
 |**CLS** — Cumulative Layout Shift|Visual stability as images/skeletons hydrate|< 0.1|
 
-> 💡 **INP is the most important metric after initial load.** A feed session lasts tens of minutes with thousands of interactions. Main-thread jank compounds in ways LCP alone cannot catch. Senior interviewers push on INP for long-lived surfaces.
+> **INP** is the most important metric after initial load. A feed session lasts tens of minutes with thousands of interactions. Main-thread jank compounds in ways **LCP** alone cannot catch. Senior interviewers push on **INP** for long-lived surfaces.
 
 Segment metrics by **device class + network type** — p75 on mid-range Android over 4G tells a different story than desktop over fiber.
+
+`p75 LCP < 2.5s`  --> means 75% users should experience 2.5s or faster(but Average hides bad experiences)
 
 #### JS resource budgets
 
@@ -871,6 +885,25 @@ Segment metrics by **device class + network type** — p75 on mid-range Androi
 
 Don't ship every post renderer, composer tool, popover, and live-update client in the initial bundle.
 
+#### Performance techniques covered so far
+
+| Technique | Purpose |  
+|---|---|  
+| Virtualization | Render only visible posts |  
+| Intersection Observer | Infinite scroll + lazy loading |  
+| Skeletons + reserved dimensions | Reduce perceived wait + prevent CLS |  
+| Scroll restoration | Restore previous feed position instantly |  
+| Adaptive request sizing | Fetch enough posts for viewport size |  
+| Cache + revalidation | Show cached feed while refreshing in background |  
+| Request deduplication | Avoid duplicate/stale requests |  
+| Data-driven renderers | Load JS only for visible post types |  
+| Image optimization | Faster image loading using CDN + lazy loading |  
+| Lazy interaction code | Delay loading menus/reaction pickers |  
+| Service Worker caching | Offline + repeat-visit performance |  
+| Optimistic UI + Outbox | Instant writes + retry failed actions |
+
+>Those techniques improve different parts of the experience: first content, scroll smoothness, visual stability, navigation speed, and perceived write latency. **The rest of this section explains how to budget, load, and measure them.**
+
 #### Facebook 3-tier JS loading model
 
 |Tier|What it contains|When to load|
@@ -879,25 +912,33 @@ Don't ship every post renderer, composer tool, popover, and live-update client i
 |**Tier 2**|Above-the-fold feed rendering, common post renderers (text + image), basic actions (like, comment, share)|Needed for first interactive paint|
 |**Tier 3**|Reaction pickers, hover cards, composer extras, menus, live subscriptions, logging, uncommon post renderers|After display, or on user intent|
 
-Code splitting types:
+> [!Info] Facebook splits JavaScript loading into visual-priority tiers
+> Tier 1 gets pixels on screen, Tier 2 makes the visible feed complete and interactive, and Tier 3 covers everything that can wait until after display or user intent.
+
+_Further Reading: ["Rebuilding our tech stack for the new Facebook.com" blog post](https://engineering.fb.com/2020/05/08/web/facebook-redesign/)_
+
+
+**Code splitting types:**
 
 - **Route-level chunks:** secondary routes (profile, notifications, settings)
 - **Data-driven renderer chunks:** only the renderer that matches returned post formats
 - **Interaction-triggered chunks:** reaction pickers, hover cards, media editors — load on user intent
 - **Idle or intent prefetch:** prefetch on `pointerdown`, route hover, or idle time, gated on device capability + network quality
 
-> 💡 Code splitting helps LCP but can hurt INP if the first tap on a reaction picker waits for a large chunk. **Prefetch common interaction code after first render or during idle.**
+> Code splitting helps LCP but can hurt INP if the first tap on a reaction picker waits for a large chunk. **Prefetch common interaction code after first render or during idle.**
 
-#### Main-thread performance
+#### Main-thread and rendering performance
 
-- Move heavy work off main thread: parsing large feed payloads, rich text rendering from entity ranges, hashtag/mention processing, media metadata decoding → **Web Worker** or `scheduler.postTask()`
+- Move heavy work off main thread: parsing large feed payloads, rich text rendering from entity ranges, hashtag/mention processing, media metadata decoding → **Web Worker** or for splitting across animation frames with `scheduler.postTask()`.
 - Avoid `onScroll` handlers that force layout via `getBoundingClientRect()` — use IntersectionObserver instead
-- `content-visibility: auto` with `contain-intrinsic-size` hint — browser skips layout + paint for off-screen content. Not a replacement for virtualization at feed scale, but useful for sidebars, collapsed comment threads.
+- For offscreen UI that cannot be fully virtualized, `content-visibility: auto` lets the browser skip layout and paint work until content enters the viewport. Use `contain-intrinsic-size` to reserve space and avoid layout shifts. Best for sidebars, hidden sections, or collapsed comments — not a replacement for virtualization in large feeds.
 
 #### Measurement loop
 
-Use `web-vitals` library to capture LCP, INP, CLS from real sessions → send to RUM pipeline. Segment by device class, network, route, release, feature flag. Correlate with product events (impressions, reactions).
+Use [`web-vitals`](https://github.com/GoogleChrome/web-vitals) to collect real-user LCP, INP, and CLS metrics and send them to a **RUM** (Real User Monitoring) pipeline. Segment metrics by device, network, route, release, and feature flag to detect regressions. Correlate performance metrics with product events (impressions, reactions, engagement) to measure business impact of frontend performance.
 
+> [!Check] Track INP, not just LCP
+> A feed that lands quickly but stutters during scroll and reaction clicks fails the user experience even if LCP looks good. INP is the metric that catches main-thread contention from virtualization, live updates, and expensive renderers, and it is the one senior interviewers push on for long-lived interaction-heavy surfaces.
 ---
 
 ### O7 — Accessibility
@@ -907,6 +948,9 @@ Use `web-vitals` library to capture LCP, INP, CLS from real sessions → send 
 - `role="feed"` on container
 - `aria-label="Home feed"` for assistive technology identification
 - **Skip link** near document start → keyboard users jump directly to feed
+
+> `<div role="feed" aria-label="Home feed">` → to identify the feed surface for assistive technology
+> `<a href="#feed">Skip to feed</a>` → so keyboard users can bypass navigation/sidebar chrome quickly
 
 #### Feed posts
 
@@ -1007,7 +1051,7 @@ Use `web-vitals` library to capture LCP, INP, CLS from real sessions → send 
 
 ---
 
-## References
+# References
 
 ### Feed architecture and rendering
 *These references inform the rendering and high-level architecture choices covered earlier in the article.*

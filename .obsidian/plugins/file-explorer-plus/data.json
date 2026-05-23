@@ -24,13 +24,6 @@
         "type": "DIRECTORIES",
         "pattern": "03 - Case Studies",
         "patternType": "STRICT"
-      },
-      {
-        "name": "",
-        "active": true,
-        "type": "FILES",
-        "pattern": "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
-        "patternType": "STRICT"
       }
     ],
     "frontMatter": [
