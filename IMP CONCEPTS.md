@@ -6,18 +6,6 @@
 - Infinite scrolling -> types of implementations?
 - data-then-code waterfall (You wait for data first, Only after data arrives you can fetch code.)
 - above-the-fold (Things visible without scrolling.)
-- Tiers of loading (Think of loading in layers.)
-		`Tier 1:`  
-		`Core app`  
-		  
-		Tier 2:  
-		Common post renderers  
-		  
-		Tier 3:  
-		Rare components  
-		Polls  
-		Marketplace cards  
-		Events
 - XSS prevention
 - request deduplication
 
@@ -26,7 +14,7 @@ Related Notes: → internal Obsidian wiki links (See Also, Connected Topics)
 Further Reading → external URLs/articles (References, External Resources, Resources, Source)
 
 
-[[Case Study - News Feed (e.g. Facebook)#The question##### Main-thread performance]]
+[[Case Study - News Feed (e.g. Facebook)#O — Optimizations and deep dive#O2 — Feed post optimizations#Optimistic updates#Reaction flow with optimistic update and rollback (Mermaid Diagram)]]
 
 > [!quote]
 > Example
