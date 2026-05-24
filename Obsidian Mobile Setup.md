@@ -1,3 +1,5 @@
+https://youtu.be/PScdHzUiBLA?si=LtkD3LqUgIBXkqSA&t=571
+
 - install obsidian mobile and create a `test_vault`
 - install `ish` app
 - run this command `apk add git`

@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "IMP CONCEPTS.md",
+                "file": "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "IMP CONCEPTS"
+              "title": "Case Study - News Feed (e.g. Facebook)"
             }
           }
         ]
@@ -107,7 +107,7 @@
             "state": {
               "type": "localgraph",
               "state": {
-                "file": "IMP CONCEPTS.md",
+                "file": "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
                 "options": {
                   "collapse-filter": true,
                   "search": "",
@@ -135,7 +135,7 @@
                 }
               },
               "icon": "lucide-git-fork",
-              "title": "Graph of IMP CONCEPTS"
+              "title": "Graph of Case Study - News Feed (e.g. Facebook)"
             }
           }
         ]
@@ -220,13 +220,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "IMP CONCEPTS.md",
+                "file": "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of IMP CONCEPTS"
+              "title": "Outline of Case Study - News Feed (e.g. Facebook)"
             }
           },
           {
@@ -285,9 +285,9 @@
   },
   "active": "e01a4304bd2ed1d2",
   "lastOpenFiles": [
-    "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
-    "IMP CONCEPTS.md",
     "Obsidian Mobile Setup.md",
+    "IMP CONCEPTS.md",
+    "03 - Case Studies/Case Study - News Feed (e.g. Facebook).md",
     "Untitled.md",
     "IMP CONCEPTS 2.md",
     "03 - Case Studies/Case Study - Autocomplete.md",
